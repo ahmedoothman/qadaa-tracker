@@ -1,0 +1,178 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Sun, Calendar } from 'lucide-react';
+import { ProgressCircle } from '@/components/UI/ProgressBar';
+import SalahCalculator from './SalahCalculator';
+
+interface SalahData {
+  totalDays: number;
+  completedDays: number;
+  startDate?: string | null;
+  endDate?: string | null;
+  menstrualDaysPerMonth?: number;
+}
+
+interface SalahTrackerProps {
+  salahData: SalahData;
+  onUpdate: (data: SalahData) => void;
+}
+
+const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [manualInput, setManualInput] = useState('');
+
+  // Use props directly
+  const totalDays = salahData?.totalDays || 0;
+  const completed = salahData?.completedDays || 0;
+
+  const handleCalculateResult = (result: {
+    totalDays: number;
+    startDate: string;
+    endDate: string;
+    menstrualDaysPerMonth: number;
+  }) => {
+    onUpdate({
+      totalDays: result.totalDays,
+      completedDays: completed,
+      startDate: result.startDate,
+      endDate: result.endDate,
+      menstrualDaysPerMonth: result.menstrualDaysPerMonth,
+    });
+    setShowCalculator(false);
+  };
+
+  const handleManualUpdate = () => {
+    const newTotal = parseInt(manualInput) || 0;
+    onUpdate({
+      ...salahData,
+      totalDays: newTotal,
+      completedDays: completed,
+    });
+    setManualInput('');
+  };
+
+  const handleProgress = (increment: number) => {
+    const newCompleted = Math.max(
+      0,
+      Math.min(totalDays, completed + increment)
+    );
+    onUpdate({
+      ...salahData,
+      totalDays: totalDays,
+      completedDays: newCompleted,
+    });
+  };
+
+  const percentage = totalDays > 0 ? (completed / totalDays) * 100 : 0;
+  const remaining = totalDays - completed;
+
+  return (
+    <div className='bg-white rounded-2xl shadow-lg p-6 mb-6'>
+      <div className='flex items-center gap-3 mb-6'>
+        <div className='w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center'>
+          <Sun className='text-teal-600' size={24} />
+        </div>
+        <div>
+          <h2 className='text-2xl font-bold text-gray-800'>Qadaa Salah</h2>
+          <p className='text-sm text-gray-600'>Missed Prayers Tracker</p>
+        </div>
+      </div>
+
+      {!showCalculator ? (
+        <>
+          <div className='flex justify-center mb-6'>
+            <ProgressCircle percentage={percentage} />
+          </div>
+
+          <div className='grid grid-cols-3 gap-4 mb-6'>
+            <div className='text-center'>
+              <p className='text-3xl font-bold text-teal-600'>{totalDays}</p>
+              <p className='text-sm text-gray-600'>Total Days</p>
+            </div>
+            <div className='text-center'>
+              <p className='text-3xl font-bold text-green-600'>{completed}</p>
+              <p className='text-sm text-gray-600'>Completed</p>
+            </div>
+            <div className='text-center'>
+              <p className='text-3xl font-bold text-gray-600'>{remaining}</p>
+              <p className='text-sm text-gray-600'>Remaining</p>
+            </div>
+          </div>
+
+          <div className='flex gap-3 mb-4'>
+            <button
+              onClick={() => handleProgress(-1)}
+              className='flex-1 bg-red-100 text-red-700 py-3 rounded-lg font-semibold hover:bg-red-200 transition-colors'
+            >
+              - 1 Day
+            </button>
+            <button
+              onClick={() => handleProgress(1)}
+              className='flex-1 bg-green-100 text-green-700 py-3 rounded-lg font-semibold hover:bg-green-200 transition-colors'
+            >
+              + 1 Day
+            </button>
+            <button
+              onClick={() => handleProgress(2)}
+              className='flex-1 bg-blue-100 text-blue-700 py-3 rounded-lg font-semibold hover:bg-blue-200 transition-colors'
+            >
+              + 2 Days
+            </button>
+          </div>
+
+          <div className='mb-4 bg-teal-50 border border-teal-200 text-teal-800 px-4 py-3 rounded-lg text-sm'>
+            <p className='font-semibold mb-1'>💡 Pro Tip:</p>
+            <p>
+              If you pray the 5 prayers in a row without a break, you can
+              complete 1 day of Qadaa prayers in just 20-30 minutes!
+            </p>
+          </div>
+
+          <div className='space-y-3'>
+            <button
+              onClick={() => setShowCalculator(true)}
+              className='w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors flex items-center justify-center gap-2'
+            >
+              <Calendar size={20} />
+              Use Calculator
+            </button>
+
+            <div className='flex gap-3'>
+              <input
+                type='number'
+                value={manualInput}
+                onChange={(e) => setManualInput(e.target.value)}
+                className='flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none'
+                placeholder={`Current: ${totalDays} days`}
+                min='0'
+              />
+              <button
+                onClick={handleManualUpdate}
+                className='px-6 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors'
+              >
+                Update
+              </button>
+            </div>
+          </div>
+
+          {percentage >= 100 && (
+            <div className='mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center'>
+              🎉 MashaAllah! You have completed all your Qadaa Salah!
+            </div>
+          )}
+        </>
+      ) : (
+        <SalahCalculator
+          onCalculate={handleCalculateResult}
+          onCancel={() => setShowCalculator(false)}
+          initialStartDate={salahData?.startDate || ''}
+          initialEndDate={salahData?.endDate || ''}
+          initialMenstrualDays={salahData?.menstrualDaysPerMonth || 0}
+        />
+      )}
+    </div>
+  );
+};
+
+export default SalahTracker;
