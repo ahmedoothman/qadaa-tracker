@@ -33,7 +33,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         return savedLang;
       }
     }
-    return 'en';
+    return 'ar';
   });
 
   useEffect(() => {

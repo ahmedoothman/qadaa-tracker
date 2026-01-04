@@ -59,7 +59,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                const lang = localStorage.getItem('qadaa-tracker-language') || 'en';
+                const lang = localStorage.getItem('qadaa-tracker-language') || 'ar';
                 document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
                 document.documentElement.lang = lang;
               } catch (e) {}
