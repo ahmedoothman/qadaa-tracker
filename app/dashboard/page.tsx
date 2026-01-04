@@ -10,6 +10,7 @@ import SalahTracker from '@/components/Salah/SalahTracker';
 import SiyamTracker from '@/components/Siyam/SiyamTracker';
 import type { User } from 'firebase/auth';
 import { RamadanData } from '@/utils/calculations';
+import { useLanguage } from '@/lib/i18n';
 
 interface SalahData {
   totalDays: number;
@@ -50,6 +51,7 @@ export default function DashboardPage() {
   const [userData, setUserDataState] = useState<UserData>(defaultUserData);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { t, isRTL } = useLanguage();
 
   useEffect(() => {
     const unsubscribe = onAuthChange(async (authUser: User | null) => {
@@ -102,7 +104,7 @@ export default function DashboardPage() {
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
           <Moon className='w-16 h-16 text-teal-600 animate-pulse mx-auto mb-4' />
-          <p className='text-gray-600'>Loading...</p>
+          <p className='text-gray-600'>{t.common.loading}</p>
         </div>
       </div>
     );
@@ -121,12 +123,13 @@ export default function DashboardPage() {
 
         <SiyamTracker siyamData={userData.siyam} onUpdate={handleSiyamUpdate} />
 
-        <div className='text-center mt-6 text-sm text-gray-600'>
-          <p className='mb-2'>
-            May Allah accept your efforts and make them a means of drawing
-            closer to Him
-          </p>
-          <p className='text-xs'>Allahumma ameen 🤲</p>
+        <div
+          className={`text-center mt-6 text-sm text-gray-600 ${
+            isRTL ? 'text-right' : ''
+          }`}
+        >
+          <p className='mb-2'>{t.dashboard.footerMessage}</p>
+          <p className='text-xs'>{t.dashboard.ameen}</p>
         </div>
       </div>
     </div>

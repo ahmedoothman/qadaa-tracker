@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { Moon } from 'lucide-react';
 import { onAuthChange } from '@/lib/firebase';
 import type { User } from 'firebase/auth';
+import { useLanguage } from '@/lib/i18n';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const unsubscribe = onAuthChange((user: User | null) => {
@@ -28,7 +30,7 @@ export default function Home() {
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
           <Moon className='w-16 h-16 text-teal-600 animate-pulse mx-auto mb-4' />
-          <p className='text-gray-600'>Loading...</p>
+          <p className='text-gray-600'>{t.common.loading}</p>
         </div>
       </div>
     );

@@ -16,7 +16,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-inter), var(--font-arabic);
 }
 
 * {
@@ -26,9 +26,85 @@
 body {
   background: linear-gradient(135deg, var(--teal-50) 0%, var(--amber-50) 100%);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-inter), var(--font-arabic), system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
+}
+
+/* RTL Support */
+html[dir='rtl'] body {
+  font-family: var(--font-arabic), var(--font-inter), system-ui, -apple-system,
+    sans-serif;
+}
+
+/* LTR Support (default) */
+html[dir='ltr'] body {
+  font-family: var(--font-inter), var(--font-arabic), system-ui, -apple-system,
+    sans-serif;
+}
+
+/* RTL Layout - Mirror the entire interface */
+html[dir='rtl'] .flex {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .flex-col {
+  flex-direction: column;
+}
+
+html[dir='rtl'] .flex-row {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .grid {
+  direction: rtl;
+}
+
+/* RTL Text alignment */
+html[dir='rtl'] input[type='text'],
+html[dir='rtl'] input[type='number'],
+html[dir='rtl'] textarea {
+  text-align: right;
+}
+
+/* Keep email and password LTR aligned */
+html[dir='rtl'] input[type='email'],
+html[dir='rtl'] input[type='password'] {
+  text-align: left;
+  direction: ltr;
+}
+
+/* LTR Text alignment (explicit) */
+html[dir='ltr'] input[type='text'],
+html[dir='ltr'] input[type='number'],
+html[dir='ltr'] textarea {
+  text-align: left;
+}
+
+/* RTL Placeholder text */
+html[dir='rtl'] input::placeholder,
+html[dir='rtl'] textarea::placeholder {
+  text-align: right;
+}
+
+html[dir='ltr'] input::placeholder,
+html[dir='ltr'] textarea::placeholder {
+  text-align: left;
+}
+
+/* RTL Button alignment */
+html[dir='rtl'] button {
+  text-align: center;
+}
+
+/* RTL margin and padding adjustments */
+html[dir='rtl'] .space-x-reverse {
+  flex-direction: row-reverse;
+}
+
+/* Override flex-row-reverse for RTL (since base flex is already reversed) */
+html[dir='rtl'] .flex-row-reverse {
+  flex-direction: row;
 }
 
 /* Custom scrollbar */

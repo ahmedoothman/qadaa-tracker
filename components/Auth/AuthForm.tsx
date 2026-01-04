@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Moon } from 'lucide-react';
+import { Moon, Globe } from 'lucide-react';
 import {
   signInWithEmail,
   signUpWithEmail,
   signInWithGoogle,
 } from '@/lib/firebase';
 import { initializeUser } from '@/lib/firestore';
+import { useLanguage } from '@/lib/i18n';
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -20,6 +21,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { t, language, setLanguage, isRTL } = useLanguage();
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       } else {
         if (!displayName.trim()) {
-          setError('Please enter your name');
+          setError(t.auth.enterName);
           setLoading(false);
           return;
         }
@@ -53,7 +55,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError(t.auth.unexpectedError);
     } finally {
       setLoading(false);
     }
@@ -76,29 +78,49 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         onSuccess?.();
       }
     } catch {
-      setError('An unexpected error occurred');
+      setError(t.auth.unexpectedError);
     } finally {
       setLoading(false);
     }
   };
 
+  const toggleLanguage = () => {
+    setLanguage(language === 'en' ? 'ar' : 'en');
+  };
+
   return (
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-amber-50 p-4'>
       <div className='bg-white rounded-2xl shadow-xl p-8 w-full max-w-md'>
+        {/* Language Toggle */}
+        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'} mb-4`}>
+          <button
+            onClick={toggleLanguage}
+            className='p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-1'
+            title={language === 'en' ? 'العربية' : 'English'}
+          >
+            <Globe size={18} />
+            <span className='text-xs font-semibold'>
+              {language === 'en' ? 'AR' : 'EN'}
+            </span>
+          </button>
+        </div>
+
         <div className='text-center mb-8'>
           <div className='w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-2xl mx-auto mb-4 flex items-center justify-center'>
             <Moon className='text-white' size={32} />
           </div>
           <h1 className='text-3xl font-bold text-gray-800 mb-2'>
-            Qadaa Tracker
+            {t.auth.title}
           </h1>
-          <p className='text-gray-600'>
-            Track your spiritual journey with ease
-          </p>
+          <p className='text-gray-600'>{t.auth.subtitle}</p>
         </div>
 
         {error && (
-          <div className='bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4'>
+          <div
+            className={`bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4 ${
+              isRTL ? 'text-right' : ''
+            }`}
+          >
             {error}
           </div>
         )}
@@ -107,38 +129,46 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           {!isLogin && (
             <input
               type='text'
-              placeholder='Your Name'
+              placeholder={t.auth.yourName}
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none'
+              className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none ${
+                isRTL ? 'text-right' : 'text-left'
+              }`}
               disabled={loading}
             />
           )}
           <input
             type='email'
-            placeholder='Email'
+            placeholder={t.auth.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none'
             disabled={loading}
             required
+            dir='ltr'
           />
           <input
             type='password'
-            placeholder='Password'
+            placeholder={t.auth.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none'
             disabled={loading}
             required
             minLength={6}
+            dir='ltr'
           />
           <button
             type='submit'
             disabled={loading}
             className='w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
           >
-            {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Sign Up'}
+            {loading
+              ? t.common.pleaseWait
+              : isLogin
+              ? t.auth.signIn
+              : t.auth.signUp}
           </button>
         </form>
 
@@ -148,7 +178,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </div>
           <div className='relative flex justify-center text-sm'>
             <span className='px-2 bg-white text-gray-500'>
-              Or continue with
+              {t.auth.orContinueWith}
             </span>
           </div>
         </div>
@@ -179,8 +209,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           Google
         </button>
 
-        <p className='text-center mt-4 text-sm text-gray-600'>
-          {isLogin ? "Don't have an account? " : 'Already have an account? '}
+        <p
+          className={`text-center mt-4 text-sm text-gray-600 ${
+            isRTL ? 'text-right' : ''
+          }`}
+        >
+          {isLogin ? t.auth.noAccount : t.auth.hasAccount}{' '}
           <button
             onClick={() => {
               setIsLogin(!isLogin);
@@ -189,7 +223,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             className='text-teal-600 font-semibold hover:underline'
             disabled={loading}
           >
-            {isLogin ? 'Sign Up' : 'Sign In'}
+            {isLogin ? t.auth.signUp : t.auth.signIn}
           </button>
         </p>
       </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Sun, Calendar } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
 import SalahCalculator from './SalahCalculator';
+import { useLanguage } from '@/lib/i18n';
 
 interface SalahData {
   totalDays: number;
@@ -21,6 +22,7 @@ interface SalahTrackerProps {
 const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [manualInput, setManualInput] = useState('');
+  const { t, isRTL } = useLanguage();
 
   // Use props directly
   const totalDays = salahData?.totalDays || 0;
@@ -69,13 +71,17 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
 
   return (
     <div className='bg-white rounded-2xl shadow-lg p-6 mb-6'>
-      <div className='flex items-center gap-3 mb-6'>
+      <div
+        className={`flex items-center gap-3 mb-6 ${
+          isRTL ? 'flex-row-reverse' : ''
+        }`}
+      >
         <div className='w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center'>
           <Sun className='text-teal-600' size={24} />
         </div>
-        <div>
-          <h2 className='text-2xl font-bold text-gray-800'>Qadaa Salah</h2>
-          <p className='text-sm text-gray-600'>Missed Prayers Tracker</p>
+        <div className={isRTL ? 'text-right' : ''}>
+          <h2 className='text-2xl font-bold text-gray-800'>{t.salah.title}</h2>
+          <p className='text-sm text-gray-600'>{t.salah.subtitle}</p>
         </div>
       </div>
 
@@ -88,77 +94,86 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
           <div className='grid grid-cols-3 gap-4 mb-6'>
             <div className='text-center'>
               <p className='text-3xl font-bold text-teal-600'>{totalDays}</p>
-              <p className='text-sm text-gray-600'>Total Days</p>
+              <p className='text-sm text-gray-600'>{t.common.totalDays}</p>
             </div>
             <div className='text-center'>
               <p className='text-3xl font-bold text-green-600'>{completed}</p>
-              <p className='text-sm text-gray-600'>Completed</p>
+              <p className='text-sm text-gray-600'>{t.common.completed}</p>
             </div>
             <div className='text-center'>
               <p className='text-3xl font-bold text-gray-600'>{remaining}</p>
-              <p className='text-sm text-gray-600'>Remaining</p>
+              <p className='text-sm text-gray-600'>{t.common.remaining}</p>
             </div>
           </div>
 
-          <div className='flex gap-3 mb-4'>
+          <div className={`flex gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <button
               onClick={() => handleProgress(-1)}
               className='flex-1 bg-red-100 text-red-700 py-3 rounded-lg font-semibold hover:bg-red-200 transition-colors'
             >
-              - 1 Day
+              {t.salah.minusOneDay}
             </button>
             <button
               onClick={() => handleProgress(1)}
               className='flex-1 bg-green-100 text-green-700 py-3 rounded-lg font-semibold hover:bg-green-200 transition-colors'
             >
-              + 1 Day
+              {t.salah.plusOneDay}
             </button>
             <button
               onClick={() => handleProgress(2)}
               className='flex-1 bg-blue-100 text-blue-700 py-3 rounded-lg font-semibold hover:bg-blue-200 transition-colors'
             >
-              + 2 Days
+              {t.salah.plusTwoDays}
             </button>
           </div>
 
-          <div className='mb-4 bg-teal-50 border border-teal-200 text-teal-800 px-4 py-3 rounded-lg text-sm'>
-            <p className='font-semibold mb-1'>💡 Pro Tip:</p>
-            <p>
-              If you pray the 5 prayers in a row without a break, you can
-              complete 1 day of Qadaa prayers in just 20-30 minutes!
-            </p>
+          <div
+            className={`mb-4 bg-teal-50 border border-teal-200 text-teal-800 px-4 py-3 rounded-lg text-sm ${
+              isRTL ? 'text-right' : ''
+            }`}
+          >
+            <p className='font-semibold mb-1'>{t.salah.proTipTitle}</p>
+            <p>{t.salah.proTip}</p>
           </div>
 
           <div className='space-y-3'>
             <button
               onClick={() => setShowCalculator(true)}
-              className='w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors flex items-center justify-center gap-2'
+              className={`w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 ${
+                isRTL ? 'flex-row-reverse' : ''
+              }`}
             >
               <Calendar size={20} />
-              Use Calculator
+              {t.common.useCalculator}
             </button>
 
-            <div className='flex gap-3'>
+            <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <input
                 type='number'
                 value={manualInput}
                 onChange={(e) => setManualInput(e.target.value)}
-                className='flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none'
-                placeholder={`Current: ${totalDays} days`}
+                className={`flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none ${
+                  isRTL ? 'text-right' : 'text-left'
+                }`}
+                placeholder={`${t.salah.currentPlaceholder} ${totalDays} ${t.common.days}`}
                 min='0'
               />
               <button
                 onClick={handleManualUpdate}
                 className='px-6 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors'
               >
-                Update
+                {t.common.update}
               </button>
             </div>
           </div>
 
           {percentage >= 100 && (
-            <div className='mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center'>
-              🎉 MashaAllah! You have completed all your Qadaa Salah!
+            <div
+              className={`mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-center ${
+                isRTL ? 'text-right' : ''
+              }`}
+            >
+              {t.salah.completionMessage}
             </div>
           )}
         </>
