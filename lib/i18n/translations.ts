@@ -25,7 +25,7 @@ export const translations = {
     // Auth
     auth: {
       title: 'Qadaa Tracker',
-      subtitle: 'Track your spiritual journey with ease',
+      subtitle: 'Track your Qadaa journey with ease',
       signIn: 'Sign In',
       signUp: 'Sign Up',
       email: 'Email',
@@ -150,7 +150,7 @@ export const translations = {
     // Auth
     auth: {
       title: 'متتبع القضاء',
-      subtitle: 'تتبع رحلتك الروحانية بسهولة',
+      subtitle: 'تتبع رحلتك للقضاء بسهولة',
       signIn: 'تسجيل الدخول',
       signUp: 'إنشاء حساب',
       email: 'البريد الإلكتروني',
