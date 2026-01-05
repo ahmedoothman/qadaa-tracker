@@ -22,8 +22,13 @@ export const ProgressCircle: React.FC<ProgressBarProps> = ({
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className='relative' style={{ width: size, height: size }}>
-      <svg width={size} height={size} className='transform -rotate-90'>
+    <div className='relative mx-auto' style={{ width: 'min(140px, 100%)', height: 'min(140px, 100%)' }}>
+      <svg 
+        width='100%' 
+        height='100%' 
+        viewBox={`0 0 ${size} ${size}`}
+        className='transform -rotate-90 max-w-[120px] sm:max-w-[140px] mx-auto'
+      >
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -50,7 +55,7 @@ export const ProgressCircle: React.FC<ProgressBarProps> = ({
         />
       </svg>
       <div className='absolute inset-0 flex flex-col items-center justify-center'>
-        <span className='text-3xl font-bold text-gray-800'>
+        <span className='text-2xl sm:text-3xl font-bold text-gray-800'>
           {Math.round(percentage)}%
         </span>
       </div>

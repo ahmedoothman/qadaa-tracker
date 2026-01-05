@@ -89,13 +89,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-amber-50 p-4'>
-      <div className='bg-white rounded-2xl shadow-xl p-8 w-full max-w-md'>
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-amber-50 p-3 sm:p-4'>
+      <div className='bg-white rounded-2xl shadow-xl p-5 sm:p-8 w-full max-w-md'>
         {/* Language Toggle */}
-        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'} mb-4`}>
+        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'} mb-3 sm:mb-4`}>
           <button
             onClick={toggleLanguage}
-            className='p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-1'
+            className='p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-1 min-h-[44px]'
             title={language === 'en' ? 'العربية' : 'English'}
           >
             <Globe size={18} />
@@ -105,14 +105,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </button>
         </div>
 
-        <div className='text-center mb-8'>
-          <div className='w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-2xl mx-auto mb-4 flex items-center justify-center'>
-            <Moon className='text-white' size={32} />
+        <div className='text-center mb-6 sm:mb-8'>
+          <div className='w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-2xl mx-auto mb-3 sm:mb-4 flex items-center justify-center'>
+            <Moon className='text-white' size={28} />
           </div>
-          <h1 className='text-3xl font-bold text-gray-800 mb-2'>
+          <h1 className='text-2xl sm:text-3xl font-bold text-gray-800 mb-2'>
             {t.auth.title}
           </h1>
-          <p className='text-gray-600'>{t.auth.subtitle}</p>
+          <p className='text-sm sm:text-base text-gray-600'>{t.auth.subtitle}</p>
         </div>
 
         {error && (
@@ -162,7 +162,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           <button
             type='submit'
             disabled={loading}
-            className='w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+            className='w-full bg-teal-600 text-white py-3 sm:py-3.5 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]'
           >
             {loading
               ? t.common.pleaseWait
@@ -172,11 +172,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           </button>
         </form>
 
-        <div className='relative my-6'>
+        <div className='relative my-5 sm:my-6'>
           <div className='absolute inset-0 flex items-center'>
             <div className='w-full border-t border-gray-300'></div>
           </div>
-          <div className='relative flex justify-center text-sm'>
+          <div className='relative flex justify-center text-xs sm:text-sm'>
             <span className='px-2 bg-white text-gray-500'>
               {t.auth.orContinueWith}
             </span>
@@ -186,7 +186,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          className='w-full bg-white border border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed'
+          className='w-full bg-white border border-gray-300 text-gray-700 py-3 sm:py-3.5 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]'
         >
           <svg className='w-5 h-5' viewBox='0 0 24 24'>
             <path

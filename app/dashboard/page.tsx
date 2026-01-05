@@ -116,7 +116,7 @@ export default function DashboardPage() {
 
   return (
     <div className='min-h-screen'>
-      <div className='max-w-4xl mx-auto p-4 pb-20'>
+      <div className='max-w-4xl mx-auto p-3 sm:p-4 pb-16 sm:pb-20'>
         <Header user={user} onLogout={handleLogout} />
 
         <SalahTracker salahData={userData.salah} onUpdate={handleSalahUpdate} />
@@ -124,11 +124,11 @@ export default function DashboardPage() {
         <SiyamTracker siyamData={userData.siyam} onUpdate={handleSiyamUpdate} />
 
         <div
-          className={`text-center mt-6 text-sm text-gray-600 ${
+          className={`text-center mt-4 sm:mt-6 text-xs sm:text-sm text-gray-600 px-2 ${
             isRTL ? 'text-right' : ''
           }`}
         >
-          <p className='mb-2'>{t.dashboard.footerMessage}</p>
+          <p className='mb-2 leading-relaxed'>{t.dashboard.footerMessage}</p>
           <p className='text-xs'>{t.dashboard.ameen}</p>
         </div>
       </div>

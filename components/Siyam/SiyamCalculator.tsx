@@ -40,19 +40,19 @@ const SiyamCalculator: React.FC<SiyamCalculatorProps> = ({
   };
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-3 sm:space-y-4'>
       <h3
-        className={`text-lg font-semibold text-gray-800 flex items-center gap-2 ${
+        className={`text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2 ${
           isRTL ? 'flex-row-reverse' : ''
         }`}
       >
-        <Calendar className='text-amber-600' size={20} />
+        <Calendar className='text-amber-600' size={18} />
         {t.siyamCalculator.title}
       </h3>
 
       {error && (
         <div
-          className={`bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm ${
+          className={`bg-red-50 border border-red-200 text-red-700 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm ${
             isRTL ? 'text-right' : ''
           }`}
         >
@@ -81,20 +81,20 @@ const SiyamCalculator: React.FC<SiyamCalculatorProps> = ({
         color='amber'
       />
 
-      <p className={`text-sm text-gray-500 ${isRTL ? 'text-right' : ''}`}>
+      <p className={`text-xs sm:text-sm text-gray-500 leading-relaxed ${isRTL ? 'text-right' : ''}`}>
         {t.siyamCalculator.hint}
       </p>
 
-      <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
         <button
           onClick={onCancel}
-          className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors'
+          className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-sm sm:text-base min-h-[48px]'
         >
           {t.common.cancel}
         </button>
         <button
           onClick={handleCalculate}
-          className='flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors'
+          className='flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base min-h-[48px]'
         >
           {t.common.calculate}
         </button>

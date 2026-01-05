@@ -49,19 +49,19 @@ const SalahCalculator: React.FC<SalahCalculatorProps> = ({
   };
 
   return (
-    <div className='space-y-4'>
+    <div className='space-y-3 sm:space-y-4'>
       <h3
-        className={`text-lg font-semibold text-gray-800 flex items-center gap-2 ${
+        className={`text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2 ${
           isRTL ? 'flex-row-reverse' : ''
         }`}
       >
-        <Calendar className='text-teal-600' size={20} />
+        <Calendar className='text-teal-600' size={18} />
         {t.salahCalculator.title}
       </h3>
 
       {error && (
         <div
-          className={`bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm ${
+          className={`bg-red-50 border border-red-200 text-red-700 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm ${
             isRTL ? 'text-right' : ''
           }`}
         >
@@ -92,7 +92,7 @@ const SalahCalculator: React.FC<SalahCalculatorProps> = ({
 
       <div>
         <label
-          className={`block text-sm font-semibold text-gray-700 mb-2 ${
+          className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-2 ${
             isRTL ? 'text-right' : ''
           }`}
         >
@@ -102,7 +102,7 @@ const SalahCalculator: React.FC<SalahCalculatorProps> = ({
           type='number'
           value={menstrualDays}
           onChange={(e) => setMenstrualDays(parseInt(e.target.value) || 0)}
-          className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none ${
+          className={`w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none text-sm sm:text-base min-h-[48px] ${
             isRTL ? 'text-right' : 'text-left'
           }`}
           placeholder={t.salahCalculator.menstrualPlaceholder}
@@ -110,22 +110,22 @@ const SalahCalculator: React.FC<SalahCalculatorProps> = ({
           max='15'
         />
         <p
-          className={`text-xs text-gray-500 mt-1 ${isRTL ? 'text-right' : ''}`}
+          className={`text-xs text-gray-500 mt-1 leading-relaxed ${ isRTL ? 'text-right' : '' }`}
         >
           {t.salahCalculator.menstrualHint}
         </p>
       </div>
 
-      <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
         <button
           onClick={onCancel}
-          className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors'
+          className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-sm sm:text-base min-h-[48px]'
         >
           {t.common.cancel}
         </button>
         <button
           onClick={handleCalculate}
-          className='flex-1 bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors'
+          className='flex-1 bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors text-sm sm:text-base min-h-[48px]'
         >
           {t.common.calculate}
         </button>

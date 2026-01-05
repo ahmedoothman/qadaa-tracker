@@ -110,6 +110,7 @@ html[dir='rtl'] .flex-row-reverse {
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -128,13 +129,15 @@ html[dir='rtl'] .flex-row-reverse {
 
 /* Focus styles */
 input:focus,
-button:focus {
+button:focus,
+textarea:focus {
   outline: none;
 }
 
 /* Smooth transitions */
 button,
-input {
+input,
+textarea {
   transition: all 0.2s ease-in-out;
 }
 
@@ -151,4 +154,54 @@ input {
 
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button,
+  a,
+  input[type='checkbox'],
+  input[type='radio'] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better text readability on mobile */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Improve scrolling on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Reduce motion for performance */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Tablet and up */
+@media (min-width: 641px) {
+  /* Custom scrollbar for larger screens */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 }

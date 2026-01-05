@@ -101,18 +101,18 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
   const percentage = totalDays > 0 ? (completedDays / totalDays) * 100 : 0;
 
   return (
-    <div className='bg-white rounded-2xl shadow-lg p-6'>
+    <div className='bg-white rounded-2xl shadow-lg p-4 sm:p-6'>
       <div
-        className={`flex items-center gap-3 mb-6 ${
+        className={`flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 ${
           isRTL ? 'flex-row-reverse' : ''
         }`}
       >
-        <div className='w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center'>
-          <Moon className='text-amber-600' size={24} />
+        <div className='w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0'>
+          <Moon className='text-amber-600' size={20} />
         </div>
-        <div className={isRTL ? 'text-right' : ''}>
-          <h2 className='text-2xl font-bold text-gray-800'>{t.siyam.title}</h2>
-          <p className='text-sm text-gray-600'>{t.siyam.subtitle}</p>
+        <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
+          <h2 className='text-xl sm:text-2xl font-bold text-gray-800 truncate'>{t.siyam.title}</h2>
+          <p className='text-xs sm:text-sm text-gray-600 truncate'>{t.siyam.subtitle}</p>
         </div>
       </div>
 
@@ -122,9 +122,9 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
           onCancel={() => setShowCalculator(false)}
         />
       ) : showAddYear ? (
-        <div className='space-y-4'>
+        <div className='space-y-3 sm:space-y-4'>
           <h3
-            className={`text-lg font-semibold text-gray-800 ${
+            className={`text-base sm:text-lg font-semibold text-gray-800 ${
               isRTL ? 'text-right' : ''
             }`}
           >
@@ -133,7 +133,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
 
           <div>
             <label
-              className={`block text-sm font-semibold text-gray-700 mb-2 ${
+              className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-2 ${
                 isRTL ? 'text-right' : ''
               }`}
             >
@@ -145,7 +145,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
               onChange={(e) =>
                 setNewYear(parseInt(e.target.value) || new Date().getFullYear())
               }
-              className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none ${
+              className={`w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'text-right' : 'text-left'
               }`}
               min='1900'
@@ -155,7 +155,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
 
           <div>
             <label
-              className={`block text-sm font-semibold text-gray-700 mb-2 ${
+              className={`block text-xs sm:text-sm font-semibold text-gray-700 mb-2 ${
                 isRTL ? 'text-right' : ''
               }`}
             >
@@ -169,7 +169,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
                   Math.min(30, Math.max(1, parseInt(e.target.value) || 1))
                 )
               }
-              className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none ${
+              className={`w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'text-right' : 'text-left'
               }`}
               min='1'
@@ -177,16 +177,16 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             />
           </div>
 
-          <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <button
               onClick={() => setShowAddYear(false)}
-              className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors'
+              className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-sm sm:text-base min-h-[48px]'
             >
               {t.common.cancel}
             </button>
             <button
               onClick={addRamadan}
-              className='flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors'
+              className='flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base min-h-[48px]'
             >
               {t.common.add}
             </button>
@@ -198,77 +198,77 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             <ProgressCircle percentage={percentage} color='#D97706' />
           </div>
 
-          <div className='grid grid-cols-3 gap-4 mb-6'>
-            <div className='text-center'>
-              <p className='text-3xl font-bold text-amber-600'>{totalDays}</p>
-              <p className='text-sm text-gray-600'>{t.common.totalDays}</p>
+          <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
+            <div className='text-center p-2 sm:p-0'>
+              <p className='text-2xl sm:text-3xl font-bold text-amber-600'>{totalDays}</p>
+              <p className='text-xs sm:text-sm text-gray-600'>{t.common.totalDays}</p>
             </div>
-            <div className='text-center'>
-              <p className='text-3xl font-bold text-green-600'>
+            <div className='text-center p-2 sm:p-0'>
+              <p className='text-2xl sm:text-3xl font-bold text-green-600'>
                 {completedDays}
               </p>
-              <p className='text-sm text-gray-600'>{t.common.completed}</p>
+              <p className='text-xs sm:text-sm text-gray-600'>{t.common.completed}</p>
             </div>
-            <div className='text-center'>
-              <p className='text-3xl font-bold text-gray-600'>
+            <div className='text-center p-2 sm:p-0 col-span-2 sm:col-span-1'>
+              <p className='text-2xl sm:text-3xl font-bold text-gray-600'>
                 {totalDays - completedDays}
               </p>
-              <p className='text-sm text-gray-600'>{t.common.remaining}</p>
+              <p className='text-xs sm:text-sm text-gray-600'>{t.common.remaining}</p>
             </div>
           </div>
 
-          <div className={`flex gap-2 mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex gap-2 mb-4 sm:mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
             <button
               onClick={() => updateCompleted(-1)}
-              className='px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-semibold text-lg'
+              className='w-12 sm:w-16 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-semibold text-lg sm:text-xl min-h-[48px]'
             >
               -
             </button>
-            <div className='flex-1 bg-gray-100 rounded-lg px-4 py-3 text-center font-bold text-xl'>
-              {completedDays} {t.siyam.daysCompleted}
+            <div className='flex-1 bg-gray-100 rounded-lg px-2 sm:px-4 py-3 text-center font-bold text-base sm:text-xl flex items-center justify-center'>
+              <span className='truncate'>{completedDays} {t.siyam.daysCompleted}</span>
             </div>
             <button
               onClick={() => updateCompleted(1)}
-              className='px-6 py-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-semibold text-lg'
+              className='w-12 sm:w-16 py-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-semibold text-lg sm:text-xl min-h-[48px]'
             >
               +
             </button>
           </div>
 
-          <div className='border-t pt-4 mb-4'>
+          <div className='border-t pt-3 sm:pt-4 mb-3 sm:mb-4'>
             <div
-              className={`flex items-center justify-between ${
+              className={`flex items-center justify-between gap-2 ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <h3 className='text-sm font-semibold text-gray-700'>
+              <h3 className='text-xs sm:text-sm font-semibold text-gray-700'>
                 {t.siyam.ramadanHistory}
               </h3>
-              <span className='text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold'>
+              <span className='text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold whitespace-nowrap'>
                 {ramadans.length}{' '}
                 {ramadans.length !== 1 ? t.siyam.ramadans : t.siyam.ramadan}
               </span>
             </div>
           </div>
 
-          <div className='space-y-3 mb-4 max-h-80 overflow-y-auto'>
+          <div className='space-y-2 sm:space-y-3 mb-3 sm:mb-4 max-h-60 sm:max-h-80 overflow-y-auto'>
             {ramadans.map((ramadan, index) => (
               <div
                 key={index}
-                className='border border-gray-200 rounded-lg p-3 bg-gray-50'
+                className='border border-gray-200 rounded-lg p-2.5 sm:p-3 bg-gray-50'
               >
                 <div
-                  className={`flex justify-between items-center ${
+                  className={`flex justify-between items-start sm:items-center gap-2 ${
                     isRTL ? 'flex-row-reverse' : ''
                   }`}
                 >
-                  <div className={isRTL ? 'text-right' : ''}>
-                    <h3 className='font-semibold text-gray-800 text-sm'>
+                  <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
+                    <h3 className='font-semibold text-gray-800 text-xs sm:text-sm truncate'>
                       {t.siyam.ramadan} {ramadan.year} AH (
                       {ramadan.gregorianYear} CE)
                     </h3>
                     {ramadan.startDate && (
-                      <p className='text-xs text-gray-500'>
+                      <p className='text-xs text-gray-500 mt-0.5 truncate'>
                         {new Date(ramadan.startDate).toLocaleDateString(
                           language === 'ar' ? 'ar-EG' : 'en-GB'
                         )}{' '}
@@ -280,16 +280,16 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
                     )}
                   </div>
                   <div
-                    className={`flex items-center gap-2 ${
+                    className={`flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
                       isRTL ? 'flex-row-reverse' : ''
                     }`}
                   >
-                    <span className='text-sm text-gray-600 font-medium'>
+                    <span className='text-xs sm:text-sm text-gray-600 font-medium whitespace-nowrap'>
                       {ramadan.totalDays} {t.common.days}
                     </span>
                     <button
                       onClick={() => removeRamadan(index)}
-                      className='p-1 text-red-500 hover:text-red-700 transition-colors'
+                      className='p-1.5 sm:p-1 text-red-500 hover:text-red-700 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center'
                       title={t.common.remove}
                     >
                       <Trash2 size={16} />
@@ -300,23 +300,23 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             ))}
           </div>
 
-          <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
             <button
               onClick={() => setShowAddYear(true)}
-              className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Plus size={20} />
+              <Plus size={18} className='sm:w-5 sm:h-5' />
               {t.common.addYear}
             </button>
             <button
               onClick={() => setShowCalculator(true)}
-              className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Calendar size={20} />
+              <Calendar size={18} className='sm:w-5 sm:h-5' />
               {t.common.recalculate}
             </button>
           </div>
@@ -332,32 +332,32 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
           )}
         </>
       ) : (
-        <div className='space-y-4'>
+        <div className='space-y-3 sm:space-y-4'>
           <p
-            className={`text-gray-600 text-center py-4 ${
+            className={`text-gray-600 text-center py-3 sm:py-4 text-sm sm:text-base ${
               isRTL ? 'text-right' : ''
             }`}
           >
             {t.siyam.noRamadansYet}
           </p>
 
-          <div className={`flex gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
             <button
               onClick={() => setShowAddYear(true)}
-              className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Plus size={20} />
+              <Plus size={18} className='sm:w-5 sm:h-5' />
               {t.common.addYear}
             </button>
             <button
               onClick={() => setShowCalculator(true)}
-              className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Calendar size={20} />
+              <Calendar size={18} className='sm:w-5 sm:h-5' />
               {t.common.useCalculator}
             </button>
           </div>
