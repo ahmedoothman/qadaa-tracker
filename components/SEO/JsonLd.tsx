@@ -20,9 +20,9 @@ export const organizationSchema = {
   name: 'Qadaa Tracker',
   description:
     'A spiritual companion app to help Muslims track and make up their missed prayers and fasts',
-  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app',
+  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app',
   logo: `${
-    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app'
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app'
   }/icons/icon-512.png`,
   sameAs: [],
 };
@@ -35,7 +35,7 @@ export const webAppSchema = {
   alternateName: 'متتبع القضاء',
   description:
     'A spiritual companion app to help Muslims track and make up their missed prayers (Salah) and fasts (Siyam). تطبيق روحاني لمساعدة المسلمين على تتبع وقضاء صلواتهم وصيامهم الفائت.',
-  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app',
+  url: process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app',
   applicationCategory: 'LifestyleApplication',
   operatingSystem: 'Web Browser',
   offers: {
@@ -53,7 +53,7 @@ export const webAppSchema = {
     'PWA support for offline access',
   ],
   screenshot: `${
-    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app'
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app'
   }/screenshots/dashboard.png`,
   aggregateRating: {
     '@type': 'AggregateRating',

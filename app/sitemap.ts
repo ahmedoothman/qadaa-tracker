@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app';
+    process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app';
 
   return [
     {

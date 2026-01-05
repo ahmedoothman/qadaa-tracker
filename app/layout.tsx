@@ -21,7 +21,7 @@ const notoSansArabic = Noto_Sans_Arabic({
 });
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.web.app';
+  process.env.NEXT_PUBLIC_BASE_URL || 'https://qadaa-tracker.vercel.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
