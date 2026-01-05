@@ -38,7 +38,7 @@ export const calculateDaysBetween = (
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   // Calculate menstrual days to exclude
-  const months = Math.floor(diffDays / 30);
+  const months = Math.floor(diffDays / 31);
   const totalMenstrualDays = menstrualDays * months;
   const adjustedDays = Math.max(0, diffDays - totalMenstrualDays);
 
