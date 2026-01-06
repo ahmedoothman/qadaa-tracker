@@ -40,7 +40,9 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
             <h1 className='text-lg sm:text-xl font-bold text-gray-800 truncate'>
               {t.header.greeting}, {user.displayName || 'User'}!
             </h1>
-            <p className='text-xs sm:text-sm text-gray-600 truncate'>{t.header.subtitle}</p>
+            <p className='text-xs sm:text-sm text-gray-600 truncate'>
+              {t.header.subtitle}
+            </p>
           </div>
         </div>
         <div

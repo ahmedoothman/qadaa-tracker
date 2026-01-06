@@ -81,7 +81,11 @@ const SiyamCalculator: React.FC<SiyamCalculatorProps> = ({
         color='amber'
       />
 
-      <p className={`text-xs sm:text-sm text-gray-500 leading-relaxed ${isRTL ? 'text-right' : ''}`}>
+      <p
+        className={`text-xs sm:text-sm text-gray-500 leading-relaxed ${
+          isRTL ? 'text-right' : ''
+        }`}
+      >
         {t.siyamCalculator.hint}
       </p>
 

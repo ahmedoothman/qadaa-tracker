@@ -80,8 +80,12 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
           <Sun className='text-teal-600' size={20} />
         </div>
         <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
-          <h2 className='text-xl sm:text-2xl font-bold text-gray-800 truncate'>{t.salah.title}</h2>
-          <p className='text-xs sm:text-sm text-gray-600 truncate'>{t.salah.subtitle}</p>
+          <h2 className='text-xl sm:text-2xl font-bold text-gray-800 truncate'>
+            {t.salah.title}
+          </h2>
+          <p className='text-xs sm:text-sm text-gray-600 truncate'>
+            {t.salah.subtitle}
+          </p>
         </div>
       </div>
 
@@ -93,20 +97,36 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
 
           <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
-              <p className='text-2xl sm:text-3xl font-bold text-teal-600'>{totalDays}</p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.totalDays}</p>
+              <p className='text-2xl sm:text-3xl font-bold text-teal-600'>
+                {totalDays}
+              </p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.totalDays}
+              </p>
             </div>
             <div className='text-center p-2 sm:p-0'>
-              <p className='text-2xl sm:text-3xl font-bold text-green-600'>{completed}</p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.completed}</p>
+              <p className='text-2xl sm:text-3xl font-bold text-green-600'>
+                {completed}
+              </p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.completed}
+              </p>
             </div>
             <div className='text-center p-2 sm:p-0 col-span-2 sm:col-span-1'>
-              <p className='text-2xl sm:text-3xl font-bold text-gray-600'>{remaining}</p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.remaining}</p>
+              <p className='text-2xl sm:text-3xl font-bold text-gray-600'>
+                {remaining}
+              </p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.remaining}
+              </p>
             </div>
           </div>
 
-          <div className={`grid grid-cols-2 sm:flex gap-2 sm:gap-3 mb-3 sm:mb-4 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+          <div
+            className={`grid grid-cols-2 sm:flex gap-2 sm:gap-3 mb-3 sm:mb-4 ${
+              isRTL ? 'sm:flex-row-reverse' : ''
+            }`}
+          >
             <button
               onClick={() => handleProgress(-1)}
               className='flex-1 bg-red-100 text-red-700 py-3 rounded-lg font-semibold hover:bg-red-200 transition-colors text-sm sm:text-base min-h-[48px]'
@@ -147,7 +167,11 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
               {t.common.useCalculator}
             </button>
 
-            <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+            <div
+              className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+                isRTL ? 'sm:flex-row-reverse' : ''
+              }`}
+            >
               <input
                 type='number'
                 value={manualInput}

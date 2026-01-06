@@ -111,8 +111,12 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
           <Moon className='text-amber-600' size={20} />
         </div>
         <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
-          <h2 className='text-xl sm:text-2xl font-bold text-gray-800 truncate'>{t.siyam.title}</h2>
-          <p className='text-xs sm:text-sm text-gray-600 truncate'>{t.siyam.subtitle}</p>
+          <h2 className='text-xl sm:text-2xl font-bold text-gray-800 truncate'>
+            {t.siyam.title}
+          </h2>
+          <p className='text-xs sm:text-sm text-gray-600 truncate'>
+            {t.siyam.subtitle}
+          </p>
         </div>
       </div>
 
@@ -177,7 +181,9 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             />
           </div>
 
-          <div className={`flex gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div
+            className={`flex gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}
+          >
             <button
               onClick={() => setShowAddYear(false)}
               className='flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors text-sm sm:text-base min-h-[48px]'
@@ -200,24 +206,36 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
 
           <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
-              <p className='text-2xl sm:text-3xl font-bold text-amber-600'>{totalDays}</p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.totalDays}</p>
+              <p className='text-2xl sm:text-3xl font-bold text-amber-600'>
+                {totalDays}
+              </p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.totalDays}
+              </p>
             </div>
             <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-green-600'>
                 {completedDays}
               </p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.completed}</p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.completed}
+              </p>
             </div>
             <div className='text-center p-2 sm:p-0 col-span-2 sm:col-span-1'>
               <p className='text-2xl sm:text-3xl font-bold text-gray-600'>
                 {totalDays - completedDays}
               </p>
-              <p className='text-xs sm:text-sm text-gray-600'>{t.common.remaining}</p>
+              <p className='text-xs sm:text-sm text-gray-600'>
+                {t.common.remaining}
+              </p>
             </div>
           </div>
 
-          <div className={`flex gap-2 mb-4 sm:mb-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <div
+            className={`flex gap-2 mb-4 sm:mb-6 ${
+              isRTL ? 'flex-row-reverse' : ''
+            }`}
+          >
             <button
               onClick={() => updateCompleted(-1)}
               className='w-12 sm:w-16 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-semibold text-lg sm:text-xl min-h-[48px]'
@@ -225,7 +243,9 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
               -
             </button>
             <div className='flex-1 bg-gray-100 rounded-lg px-2 sm:px-4 py-3 text-center font-bold text-base sm:text-xl flex items-center justify-center'>
-              <span className='truncate'>{completedDays} {t.siyam.daysCompleted}</span>
+              <span className='truncate'>
+                {completedDays} {t.siyam.daysCompleted}
+              </span>
             </div>
             <button
               onClick={() => updateCompleted(1)}
@@ -262,7 +282,9 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
                     isRTL ? 'flex-row-reverse' : ''
                   }`}
                 >
-                  <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
+                  <div
+                    className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}
+                  >
                     <h3 className='font-semibold text-gray-800 text-xs sm:text-sm truncate'>
                       {t.siyam.ramadan} {ramadan.year} AH (
                       {ramadan.gregorianYear} CE)
@@ -300,7 +322,11 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             ))}
           </div>
 
-          <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+          <div
+            className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+              isRTL ? 'sm:flex-row-reverse' : ''
+            }`}
+          >
             <button
               onClick={() => setShowAddYear(true)}
               className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
@@ -341,7 +367,11 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             {t.siyam.noRamadansYet}
           </p>
 
-          <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${isRTL ? 'sm:flex-row-reverse' : ''}`}>
+          <div
+            className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+              isRTL ? 'sm:flex-row-reverse' : ''
+            }`}
+          >
             <button
               onClick={() => setShowAddYear(true)}
               className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${

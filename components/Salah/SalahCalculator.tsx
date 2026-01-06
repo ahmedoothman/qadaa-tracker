@@ -110,7 +110,9 @@ const SalahCalculator: React.FC<SalahCalculatorProps> = ({
           max='15'
         />
         <p
-          className={`text-xs text-gray-500 mt-1 leading-relaxed ${ isRTL ? 'text-right' : '' }`}
+          className={`text-xs text-gray-500 mt-1 leading-relaxed ${
+            isRTL ? 'text-right' : ''
+          }`}
         >
           {t.salahCalculator.menstrualHint}
         </p>

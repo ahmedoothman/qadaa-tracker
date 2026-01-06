@@ -22,10 +22,13 @@ export const ProgressCircle: React.FC<ProgressBarProps> = ({
   const offset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className='relative mx-auto' style={{ width: 'min(140px, 100%)', height: 'min(140px, 100%)' }}>
-      <svg 
-        width='100%' 
-        height='100%' 
+    <div
+      className='relative mx-auto'
+      style={{ width: 'min(140px, 100%)', height: 'min(140px, 100%)' }}
+    >
+      <svg
+        width='100%'
+        height='100%'
         viewBox={`0 0 ${size} ${size}`}
         className='transform -rotate-90 max-w-[120px] sm:max-w-[140px] mx-auto'
       >

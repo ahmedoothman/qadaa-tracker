@@ -92,7 +92,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-amber-50 p-3 sm:p-4'>
       <div className='bg-white rounded-2xl shadow-xl p-5 sm:p-8 w-full max-w-md'>
         {/* Language Toggle */}
-        <div className={`flex ${isRTL ? 'justify-start' : 'justify-end'} mb-3 sm:mb-4`}>
+        <div
+          className={`flex ${
+            isRTL ? 'justify-start' : 'justify-end'
+          } mb-3 sm:mb-4`}
+        >
           <button
             onClick={toggleLanguage}
             className='p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-1 min-h-[44px]'
@@ -112,7 +116,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           <h1 className='text-2xl sm:text-3xl font-bold text-gray-800 mb-2'>
             {t.auth.title}
           </h1>
-          <p className='text-sm sm:text-base text-gray-600'>{t.auth.subtitle}</p>
+          <p className='text-sm sm:text-base text-gray-600'>
+            {t.auth.subtitle}
+          </p>
         </div>
 
         {error && (
