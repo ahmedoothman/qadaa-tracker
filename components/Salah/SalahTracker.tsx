@@ -12,6 +12,13 @@ interface SalahData {
   startDate?: string | null;
   endDate?: string | null;
   menstrualDaysPerMonth?: number;
+  prayerCounters?: {
+    fajr: number;
+    dhuhr: number;
+    asr: number;
+    maghrib: number;
+    isha: number;
+  };
 }
 
 interface SalahTrackerProps {
@@ -27,6 +34,78 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
   // Use props directly
   const totalDays = salahData?.totalDays || 0;
   const completed = salahData?.completedDays || 0;
+
+  // Initialize prayer counters
+  const prayerCounters = salahData?.prayerCounters || {
+    fajr: 0,
+    dhuhr: 0,
+    asr: 0,
+    maghrib: 0,
+    isha: 0,
+  };
+
+  const prayers = [
+    { name: 'Fajr', nameAr: 'الفجر', key: 'fajr' as const, color: 'purple' },
+    { name: 'Dhuhr', nameAr: 'الظهر', key: 'dhuhr' as const, color: 'blue' },
+    { name: 'Asr', nameAr: 'العصر', key: 'asr' as const, color: 'amber' },
+    {
+      name: 'Maghrib',
+      nameAr: 'المغرب',
+      key: 'maghrib' as const,
+      color: 'orange',
+    },
+    { name: 'Isha', nameAr: 'العشاء', key: 'isha' as const, color: 'indigo' },
+  ];
+
+  // Check if all prayers have at least 1 count and convert to day
+  const checkAndConvertToDay = (updatedCounters: typeof prayerCounters) => {
+    const allHaveAtLeastOne = Object.values(updatedCounters).every(
+      (count) => count >= 1
+    );
+
+    if (allHaveAtLeastOne) {
+      // Reduce each counter by 1 and increase completed days by 1
+      const newCounters = {
+        fajr: updatedCounters.fajr - 1,
+        dhuhr: updatedCounters.dhuhr - 1,
+        asr: updatedCounters.asr - 1,
+        maghrib: updatedCounters.maghrib - 1,
+        isha: updatedCounters.isha - 1,
+      };
+
+      const newCompleted = Math.min(totalDays, completed + 1);
+
+      onUpdate({
+        ...salahData,
+        completedDays: newCompleted,
+        prayerCounters: newCounters,
+      });
+
+      // Recursively check if we can convert again
+      setTimeout(() => checkAndConvertToDay(newCounters), 100);
+    }
+  };
+
+  const handlePrayerIncrement = (
+    prayerKey: keyof typeof prayerCounters,
+    increment: number
+  ) => {
+    const newCount = Math.max(0, prayerCounters[prayerKey] + increment);
+    const updatedCounters = {
+      ...prayerCounters,
+      [prayerKey]: newCount,
+    };
+
+    onUpdate({
+      ...salahData,
+      prayerCounters: updatedCounters,
+    });
+
+    // Check if we should convert to a day
+    if (increment > 0) {
+      setTimeout(() => checkAndConvertToDay(updatedCounters), 100);
+    }
+  };
 
   const handleCalculateResult = (result: {
     totalDays: number;
@@ -121,7 +200,14 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
               </p>
             </div>
           </div>
-
+          <div
+            className={`mb-3 sm:mb-4 bg-teal-50 border border-teal-200 text-teal-800 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm ${
+              isRTL ? 'text-right' : ''
+            }`}
+          >
+            <p className='font-semibold mb-1'>{t.salah.proTipTitle}</p>
+            <p className='leading-relaxed'>{t.salah.proTip}</p>
+          </div>
           <div
             className={`grid grid-cols-2 sm:flex gap-2 sm:gap-3 mb-3 sm:mb-4 ${
               isRTL ? 'sm:flex-row-reverse' : ''
@@ -147,13 +233,47 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
             </button>
           </div>
 
-          <div
-            className={`mb-3 sm:mb-4 bg-teal-50 border border-teal-200 text-teal-800 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm ${
-              isRTL ? 'text-right' : ''
-            }`}
-          >
-            <p className='font-semibold mb-1'>{t.salah.proTipTitle}</p>
-            <p className='leading-relaxed'>{t.salah.proTip}</p>
+          {/* Prayer Counters */}
+          <div className='mb-4 p-3 bg-gray-50 rounded-lg'>
+            <p className='text-xs text-gray-600 mb-2 text-center'>
+              {isRTL ? '✨ 5 صلوات = يوم واحد' : '✨ 5 prayers = 1 day'}
+            </p>
+            <div className='space-y-2'>
+              {prayers.map((prayer) => {
+                const count = prayerCounters[prayer.key];
+
+                return (
+                  <div
+                    key={prayer.key}
+                    className={`flex items-center justify-center gap-3 ${
+                      isRTL ? 'flex-row-reverse' : ''
+                    }`}
+                  >
+                    <span className='text-sm font-medium text-gray-700 w-16 flex-shrink-0 text-center'>
+                      {isRTL ? prayer.nameAr : prayer.name}
+                    </span>
+                    <span className='text-lg font-bold text-teal-600 w-8 text-center'>
+                      {count}
+                    </span>
+                    <div className='flex gap-2'>
+                      <button
+                        onClick={() => handlePrayerIncrement(prayer.key, -1)}
+                        className='w-8 h-8 bg-white border border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-100 transition-colors text-sm flex items-center justify-center'
+                        disabled={count === 0}
+                      >
+                        −
+                      </button>
+                      <button
+                        onClick={() => handlePrayerIncrement(prayer.key, 1)}
+                        className='w-8 h-8 bg-teal-600 text-white font-semibold rounded-full hover:bg-teal-700 transition-colors text-sm flex items-center justify-center'
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div className='space-y-2 sm:space-y-3'>

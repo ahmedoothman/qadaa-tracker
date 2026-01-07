@@ -18,6 +18,13 @@ interface SalahData {
   startDate?: string | null;
   endDate?: string | null;
   menstrualDaysPerMonth?: number;
+  prayerCounters?: {
+    fajr: number;
+    dhuhr: number;
+    asr: number;
+    maghrib: number;
+    isha: number;
+  };
 }
 
 interface SiyamData {
@@ -38,6 +45,13 @@ const defaultUserData: UserData = {
     startDate: null,
     endDate: null,
     menstrualDaysPerMonth: 0,
+    prayerCounters: {
+      fajr: 0,
+      dhuhr: 0,
+      asr: 0,
+      maghrib: 0,
+      isha: 0,
+    },
   },
   siyam: {
     totalDays: 0,
