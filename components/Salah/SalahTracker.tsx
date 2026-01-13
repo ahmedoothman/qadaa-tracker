@@ -19,6 +19,8 @@ interface SalahData {
     maghrib: number;
     isha: number;
   };
+  firstIncreaseAt?: string | null;
+  lastIncreaseAt?: string | null;
 }
 
 interface SalahTrackerProps {
@@ -96,9 +98,23 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
       [prayerKey]: newCount,
     };
 
+    const now = new Date().toISOString();
+    const updates: Partial<SalahData> = {
+      prayerCounters: updatedCounters,
+    };
+
+    if (increment > 0) {
+      // Track first increase if not set
+      if (!salahData.firstIncreaseAt) {
+        updates.firstIncreaseAt = now;
+      }
+      // Always update last increase
+      updates.lastIncreaseAt = now;
+    }
+
     onUpdate({
       ...salahData,
-      prayerCounters: updatedCounters,
+      ...updates,
     });
 
     // Check if we should convert to a day
@@ -138,10 +154,25 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
       0,
       Math.min(totalDays, completed + increment)
     );
-    onUpdate({
-      ...salahData,
+
+    const now = new Date().toISOString();
+    const updates: Partial<SalahData> = {
       totalDays: totalDays,
       completedDays: newCompleted,
+    };
+
+    if (increment > 0) {
+      // Track first increase if not set
+      if (!salahData.firstIncreaseAt) {
+        updates.firstIncreaseAt = now;
+      }
+      // Always update last increase
+      updates.lastIncreaseAt = now;
+    }
+
+    onUpdate({
+      ...salahData,
+      ...updates,
     });
   };
 
@@ -310,6 +341,28 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
               </button>
             </div>
           </div>
+
+          {/* Timestamp Information */}
+          {(salahData.firstIncreaseAt || salahData.lastIncreaseAt) && (
+            <div className='mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 space-y-1'>
+              {salahData.firstIncreaseAt && (
+                <div className={isRTL ? 'text-right' : ''}>
+                  <span className='font-semibold'>
+                    {isRTL ? 'أول زيادة: ' : 'First increase: '}
+                  </span>
+                  {new Date(salahData.firstIncreaseAt).toLocaleString()}
+                </div>
+              )}
+              {salahData.lastIncreaseAt && (
+                <div className={isRTL ? 'text-right' : ''}>
+                  <span className='font-semibold'>
+                    {isRTL ? 'آخر زيادة: ' : 'Last increase: '}
+                  </span>
+                  {new Date(salahData.lastIncreaseAt).toLocaleString()}
+                </div>
+              )}
+            </div>
+          )}
 
           {percentage >= 100 && (
             <div

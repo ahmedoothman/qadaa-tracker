@@ -11,6 +11,8 @@ interface SiyamData {
   totalDays: number;
   completedDays: number;
   ramadans: RamadanData[]; // For informational purposes only
+  firstIncreaseAt?: string | null;
+  lastIncreaseAt?: string | null;
 }
 
 interface SiyamTrackerProps {
@@ -48,10 +50,26 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
       0,
       Math.min(totalDays, completedDays + increment)
     );
-    onUpdate({
+
+    const now = new Date().toISOString();
+    const updates: Partial<SiyamData> = {
       totalDays,
       completedDays: newCompleted,
       ramadans,
+    };
+
+    if (increment > 0) {
+      // Track first increase if not set
+      if (!siyamData.firstIncreaseAt) {
+        updates.firstIncreaseAt = now;
+      }
+      // Always update last increase
+      updates.lastIncreaseAt = now;
+    }
+
+    onUpdate({
+      ...siyamData,
+      ...updates,
     });
   };
 
@@ -346,6 +364,28 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
               {t.common.recalculate}
             </button>
           </div>
+
+          {/* Timestamp Information */}
+          {(siyamData.firstIncreaseAt || siyamData.lastIncreaseAt) && (
+            <div className='mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 space-y-1'>
+              {siyamData.firstIncreaseAt && (
+                <div className={isRTL ? 'text-right' : ''}>
+                  <span className='font-semibold'>
+                    {isRTL ? 'أول زيادة: ' : 'First increase: '}
+                  </span>
+                  {new Date(siyamData.firstIncreaseAt).toLocaleString()}
+                </div>
+              )}
+              {siyamData.lastIncreaseAt && (
+                <div className={isRTL ? 'text-right' : ''}>
+                  <span className='font-semibold'>
+                    {isRTL ? 'آخر زيادة: ' : 'Last increase: '}
+                  </span>
+                  {new Date(siyamData.lastIncreaseAt).toLocaleString()}
+                </div>
+              )}
+            </div>
+          )}
 
           {percentage >= 100 && (
             <div

@@ -25,12 +25,16 @@ interface SalahData {
     maghrib: number;
     isha: number;
   };
+  firstIncreaseAt?: string | null;
+  lastIncreaseAt?: string | null;
 }
 
 interface SiyamData {
   totalDays: number;
   completedDays: number;
   ramadans: RamadanData[]; // For informational purposes only
+  firstIncreaseAt?: string | null;
+  lastIncreaseAt?: string | null;
 }
 
 interface UserData {
@@ -52,11 +56,15 @@ const defaultUserData: UserData = {
       maghrib: 0,
       isha: 0,
     },
+    firstIncreaseAt: null,
+    lastIncreaseAt: null,
   },
   siyam: {
     totalDays: 0,
     completedDays: 0,
     ramadans: [],
+    firstIncreaseAt: null,
+    lastIncreaseAt: null,
   },
 };
 
