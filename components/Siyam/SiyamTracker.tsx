@@ -1,11 +1,26 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Moon, Calendar, Plus, Trash2 } from 'lucide-react';
+import { Moon, Calendar, Plus, Trash2, Clock, PlayCircle } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
 import SiyamCalculator from './SiyamCalculator';
 import { RamadanData } from '@/utils/calculations';
 import { useLanguage } from '@/lib/i18n';
+
+// Helper function to format date with day name
+const formatDateWithDay = (dateString: string, language: string): { date: string; day: string } => {
+  const date = new Date(dateString);
+  const locale = language === 'ar' ? 'ar-EG' : 'en-US';
+  const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
+  const formattedDate = date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return { date: formattedDate, day: dayName };
+};
 
 interface SiyamData {
   totalDays: number;
@@ -218,11 +233,57 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
         </div>
       ) : ramadans.length > 0 ? (
         <>
-          <div className='flex justify-center mb-6'>
+          {/* Progress Circle with Date Boxes on same line */}
+          <div className={`flex items-center justify-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            {/* First Increase Box */}
+            {siyamData.firstIncreaseAt && (() => {
+              const { date, day } = formatDateWithDay(siyamData.firstIncreaseAt, language);
+              return (
+                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className='w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0'>
+                    <PlayCircle className='text-amber-600' size={16} />
+                  </div>
+                  <div className={`${isRTL ? 'text-right' : ''}`}>
+                    <p className='text-[10px] uppercase tracking-wide text-amber-600 font-semibold'>
+                      {isRTL ? 'أول زيادة' : 'First Increase'}
+                    </p>
+                    <p className='text-xs font-bold text-gray-800'>{day}</p>
+                    <p className='text-[10px] text-gray-500'>{date}</p>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Progress Circle */}
             <ProgressCircle percentage={percentage} color='#D97706' />
+
+            {/* Last Increase Box */}
+            {siyamData.lastIncreaseAt && (() => {
+              const { date, day } = formatDateWithDay(siyamData.lastIncreaseAt, language);
+              return (
+                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className='w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0'>
+                    <Clock className='text-orange-600' size={16} />
+                  </div>
+                  <div className={`${isRTL ? 'text-right' : ''}`}>
+                    <p className='text-[10px] uppercase tracking-wide text-orange-600 font-semibold'>
+                      {isRTL ? 'آخر زيادة' : 'Last Increase'}
+                    </p>
+                    <p className='text-xs font-bold text-gray-800'>{day}</p>
+                    <p className='text-[10px] text-gray-500'>{date}</p>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Show only progress if no date boxes */}
+            {!siyamData.firstIncreaseAt && !siyamData.lastIncreaseAt && (
+              <ProgressCircle percentage={percentage} color='#D97706' />
+            )}
           </div>
 
-          <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
+          {/* Stats Grid */}
+          <div className='grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-amber-600'>
                 {totalDays}
@@ -239,7 +300,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
                 {t.common.completed}
               </p>
             </div>
-            <div className='text-center p-2 sm:p-0 col-span-2 sm:col-span-1'>
+            <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-gray-600'>
                 {totalDays - completedDays}
               </p>
@@ -364,28 +425,6 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
               {t.common.recalculate}
             </button>
           </div>
-
-          {/* Timestamp Information */}
-          {(siyamData.firstIncreaseAt || siyamData.lastIncreaseAt) && (
-            <div className='mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 space-y-1'>
-              {siyamData.firstIncreaseAt && (
-                <div className={isRTL ? 'text-right' : ''}>
-                  <span className='font-semibold'>
-                    {isRTL ? 'أول زيادة: ' : 'First increase: '}
-                  </span>
-                  {new Date(siyamData.firstIncreaseAt).toLocaleString()}
-                </div>
-              )}
-              {siyamData.lastIncreaseAt && (
-                <div className={isRTL ? 'text-right' : ''}>
-                  <span className='font-semibold'>
-                    {isRTL ? 'آخر زيادة: ' : 'Last increase: '}
-                  </span>
-                  {new Date(siyamData.lastIncreaseAt).toLocaleString()}
-                </div>
-              )}
-            </div>
-          )}
 
           {percentage >= 100 && (
             <div

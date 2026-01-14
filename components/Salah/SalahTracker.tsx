@@ -1,10 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sun, Calendar } from 'lucide-react';
+import { Sun, Calendar, Clock, PlayCircle } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
 import SalahCalculator from './SalahCalculator';
 import { useLanguage } from '@/lib/i18n';
+
+// Helper function to format date with day name
+const formatDateWithDay = (dateString: string, language: string): { date: string; day: string } => {
+  const date = new Date(dateString);
+  const locale = language === 'ar' ? 'ar-EG' : 'en-US';
+  const dayName = date.toLocaleDateString(locale, { weekday: 'long' });
+  const formattedDate = date.toLocaleDateString(locale, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+  return { date: formattedDate, day: dayName };
+};
 
 interface SalahData {
   totalDays: number;
@@ -31,7 +46,7 @@ interface SalahTrackerProps {
 const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [manualInput, setManualInput] = useState('');
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, language } = useLanguage();
 
   // Use props directly
   const totalDays = salahData?.totalDays || 0;
@@ -201,11 +216,57 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
 
       {!showCalculator ? (
         <>
-          <div className='flex justify-center mb-6'>
+          {/* Progress Circle with Date Boxes on same line */}
+          <div className={`flex items-center justify-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+            {/* First Increase Box */}
+            {salahData.firstIncreaseAt && (() => {
+              const { date, day } = formatDateWithDay(salahData.firstIncreaseAt, language);
+              return (
+                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className='w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0'>
+                    <PlayCircle className='text-teal-600' size={16} />
+                  </div>
+                  <div className={`${isRTL ? 'text-right' : ''}`}>
+                    <p className='text-[10px] uppercase tracking-wide text-teal-600 font-semibold'>
+                      {isRTL ? 'أول زيادة' : 'First Increase'}
+                    </p>
+                    <p className='text-xs font-bold text-gray-800'>{day}</p>
+                    <p className='text-[10px] text-gray-500'>{date}</p>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Progress Circle */}
             <ProgressCircle percentage={percentage} />
+
+            {/* Last Increase Box */}
+            {salahData.lastIncreaseAt && (() => {
+              const { date, day } = formatDateWithDay(salahData.lastIncreaseAt, language);
+              return (
+                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className='w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0'>
+                    <Clock className='text-emerald-600' size={16} />
+                  </div>
+                  <div className={`${isRTL ? 'text-right' : ''}`}>
+                    <p className='text-[10px] uppercase tracking-wide text-emerald-600 font-semibold'>
+                      {isRTL ? 'آخر زيادة' : 'Last Increase'}
+                    </p>
+                    <p className='text-xs font-bold text-gray-800'>{day}</p>
+                    <p className='text-[10px] text-gray-500'>{date}</p>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Show only progress if no date boxes */}
+            {!salahData.firstIncreaseAt && !salahData.lastIncreaseAt && (
+              <ProgressCircle percentage={percentage} />
+            )}
           </div>
 
-          <div className='grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
+          {/* Stats Grid */}
+          <div className='grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-teal-600'>
                 {totalDays}
@@ -222,7 +283,7 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
                 {t.common.completed}
               </p>
             </div>
-            <div className='text-center p-2 sm:p-0 col-span-2 sm:col-span-1'>
+            <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-gray-600'>
                 {remaining}
               </p>
@@ -341,28 +402,6 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
               </button>
             </div>
           </div>
-
-          {/* Timestamp Information */}
-          {(salahData.firstIncreaseAt || salahData.lastIncreaseAt) && (
-            <div className='mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-600 space-y-1'>
-              {salahData.firstIncreaseAt && (
-                <div className={isRTL ? 'text-right' : ''}>
-                  <span className='font-semibold'>
-                    {isRTL ? 'أول زيادة: ' : 'First increase: '}
-                  </span>
-                  {new Date(salahData.firstIncreaseAt).toLocaleString()}
-                </div>
-              )}
-              {salahData.lastIncreaseAt && (
-                <div className={isRTL ? 'text-right' : ''}>
-                  <span className='font-semibold'>
-                    {isRTL ? 'آخر زيادة: ' : 'Last increase: '}
-                  </span>
-                  {new Date(salahData.lastIncreaseAt).toLocaleString()}
-                </div>
-              )}
-            </div>
-          )}
 
           {percentage >= 100 && (
             <div
