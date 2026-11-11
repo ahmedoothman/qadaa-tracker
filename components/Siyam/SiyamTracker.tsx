@@ -76,19 +76,17 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
     if (actualDelta === 0) return;
 
     const now = new Date().toISOString();
-    let updatedLogs = [...historyLogs];
+    let updatedLogs: HistoryLogEntry[] = [...historyLogs];
 
     if (saveHistory) {
-      updatedLogs = [
-        {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          timestamp: now,
-          action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
-          delta: actualDelta,
-          completedAfter: newCompleted,
-        },
-        ...updatedLogs,
-      ].slice(0, MAX_HISTORY_LOGS);
+      const dayEntry: HistoryLogEntry = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        timestamp: now,
+        action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
+        delta: actualDelta,
+        completedAfter: newCompleted,
+      };
+      updatedLogs = [dayEntry, ...updatedLogs].slice(0, MAX_HISTORY_LOGS);
     }
 
     const updates: Partial<SiyamData> = {

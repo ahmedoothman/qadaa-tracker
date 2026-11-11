@@ -94,21 +94,19 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
     };
     let currentCompleted = completed;
     const now = new Date().toISOString();
-    let updatedLogs = [...historyLogs];
+    let updatedLogs: HistoryLogEntry[] = [...historyLogs];
 
     if (saveHistory) {
-      updatedLogs = [
-        {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          timestamp: now,
-          action: actualDelta > 0 ? 'prayer_increment' : 'prayer_decrement',
-          delta: actualDelta,
-          prayer: prayerKey,
-          completedAfter: currentCompleted,
-          prayerCountAfter: newCount,
-        },
-        ...updatedLogs,
-      ];
+      const prayerEntry: HistoryLogEntry = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        timestamp: now,
+        action: actualDelta > 0 ? 'prayer_increment' : 'prayer_decrement',
+        delta: actualDelta,
+        prayer: prayerKey,
+        completedAfter: currentCompleted,
+        prayerCountAfter: newCount,
+      };
+      updatedLogs = [prayerEntry, ...updatedLogs];
     }
 
     if (increment > 0) {
@@ -123,16 +121,14 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
         currentCompleted = Math.min(totalDays, currentCompleted + 1);
 
         if (saveHistory) {
-          updatedLogs = [
-            {
-              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-              timestamp: now,
-              action: 'auto_convert_day',
-              delta: 1,
-              completedAfter: currentCompleted,
-            },
-            ...updatedLogs,
-          ];
+          const convertEntry: HistoryLogEntry = {
+            id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            timestamp: now,
+            action: 'auto_convert_day',
+            delta: 1,
+            completedAfter: currentCompleted,
+          };
+          updatedLogs = [convertEntry, ...updatedLogs];
         }
       }
     }
@@ -192,19 +188,17 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
     if (actualDelta === 0) return;
 
     const now = new Date().toISOString();
-    let updatedLogs = [...historyLogs];
+    let updatedLogs: HistoryLogEntry[] = [...historyLogs];
 
     if (saveHistory) {
-      updatedLogs = [
-        {
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-          timestamp: now,
-          action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
-          delta: actualDelta,
-          completedAfter: newCompleted,
-        },
-        ...updatedLogs,
-      ].slice(0, MAX_HISTORY_LOGS);
+      const dayEntry: HistoryLogEntry = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        timestamp: now,
+        action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
+        delta: actualDelta,
+        completedAfter: newCompleted,
+      };
+      updatedLogs = [dayEntry, ...updatedLogs].slice(0, MAX_HISTORY_LOGS);
     }
 
     const updates: Partial<SalahData> = {
