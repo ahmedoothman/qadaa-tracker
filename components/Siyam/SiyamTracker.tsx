@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import { Moon, Calendar, Plus, Trash2, Clock, PlayCircle } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
+import HistoryLog, { HistoryLogEntry } from '@/components/UI/HistoryLog';
 import SiyamCalculator from './SiyamCalculator';
 import { RamadanData } from '@/utils/calculations';
 import { useLanguage } from '@/lib/i18n';
+
+const MAX_HISTORY_LOGS = 200;
 
 // Helper function to format date with day name
 const formatDateWithDay = (dateString: string, language: string): { date: string; day: string } => {
@@ -28,6 +31,8 @@ interface SiyamData {
   ramadans: RamadanData[]; // For informational purposes only
   firstIncreaseAt?: string | null;
   lastIncreaseAt?: string | null;
+  saveHistory?: boolean;
+  historyLogs?: HistoryLogEntry[];
 }
 
 interface SiyamTrackerProps {
@@ -42,10 +47,11 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
   const [newDays, setNewDays] = useState(30);
   const { t, isRTL, language } = useLanguage();
 
-  // Use props directly
   const ramadans = siyamData?.ramadans || [];
   const totalDays = siyamData?.totalDays || 0;
   const completedDays = siyamData?.completedDays || 0;
+  const saveHistory = siyamData?.saveHistory ?? true;
+  const historyLogs = siyamData?.historyLogs || [];
 
   const handleCalculateResult = (calculatedRamadans: RamadanData[]) => {
     const newTotalDays = calculatedRamadans.reduce(
@@ -53,8 +59,9 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
       0
     );
     onUpdate({
+      ...siyamData,
       totalDays: newTotalDays,
-      completedDays: 0, // Reset completed days when recalculating
+      completedDays: 0,
       ramadans: calculatedRamadans,
     });
     setShowCalculator(false);
@@ -65,20 +72,36 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
       0,
       Math.min(totalDays, completedDays + increment)
     );
+    const actualDelta = newCompleted - completedDays;
+    if (actualDelta === 0) return;
 
     const now = new Date().toISOString();
+    let updatedLogs = [...historyLogs];
+
+    if (saveHistory) {
+      updatedLogs = [
+        {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          timestamp: now,
+          action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
+          delta: actualDelta,
+          completedAfter: newCompleted,
+        },
+        ...updatedLogs,
+      ].slice(0, MAX_HISTORY_LOGS);
+    }
+
     const updates: Partial<SiyamData> = {
       totalDays,
       completedDays: newCompleted,
       ramadans,
+      historyLogs: updatedLogs,
     };
 
     if (increment > 0) {
-      // Track first increase if not set
       if (!siyamData.firstIncreaseAt) {
         updates.firstIncreaseAt = now;
       }
-      // Always update last increase
       updates.lastIncreaseAt = now;
     }
 
@@ -88,8 +111,21 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
     });
   };
 
+  const handleToggleSaveHistory = (enabled: boolean) => {
+    onUpdate({
+      ...siyamData,
+      saveHistory: enabled,
+    });
+  };
+
+  const handleClearHistory = () => {
+    onUpdate({
+      ...siyamData,
+      historyLogs: [],
+    });
+  };
+
   const addRamadan = () => {
-    // Check if year already exists
     if (ramadans.some((r) => r.gregorianYear === newYear)) {
       alert(t.siyam.yearAlreadyExists);
       return;
@@ -98,7 +134,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
     const updated = [
       ...ramadans,
       {
-        year: 0, // Hijri year - not used for manual entry
+        year: 0,
         gregorianYear: newYear,
         startDate: '',
         endDate: '',
@@ -109,6 +145,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
     updated.sort((a, b) => a.gregorianYear - b.gregorianYear);
     const newTotalDays = updated.reduce((sum, r) => sum + r.totalDays, 0);
     onUpdate({
+      ...siyamData,
       totalDays: newTotalDays,
       completedDays,
       ramadans: updated,
@@ -124,6 +161,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
       const newTotalDays = updated.reduce((sum, r) => sum + r.totalDays, 0);
       const newCompleted = Math.min(completedDays, newTotalDays);
       onUpdate({
+        ...siyamData,
         totalDays: newTotalDays,
         completedDays: newCompleted,
         ramadans: updated,
@@ -435,6 +473,14 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
               {t.siyam.completionMessage}
             </div>
           )}
+
+          <HistoryLog
+            logs={historyLogs}
+            saveHistory={saveHistory}
+            onToggleSaveHistory={handleToggleSaveHistory}
+            onClearHistory={handleClearHistory}
+            accentColor='amber'
+          />
         </>
       ) : (
         <div className='space-y-3 sm:space-y-4'>

@@ -8,6 +8,7 @@ import { getUserData, setUserData, trackVisit } from '@/lib/firestore';
 import Header from '@/components/UI/Header';
 import SalahTracker from '@/components/Salah/SalahTracker';
 import SiyamTracker from '@/components/Siyam/SiyamTracker';
+import type { HistoryLogEntry } from '@/components/UI/HistoryLog';
 import type { User } from 'firebase/auth';
 import { RamadanData } from '@/utils/calculations';
 import { useLanguage } from '@/lib/i18n';
@@ -27,14 +28,18 @@ interface SalahData {
   };
   firstIncreaseAt?: string | null;
   lastIncreaseAt?: string | null;
+  saveHistory?: boolean;
+  historyLogs?: HistoryLogEntry[];
 }
 
 interface SiyamData {
   totalDays: number;
   completedDays: number;
-  ramadans: RamadanData[]; // For informational purposes only
+  ramadans: RamadanData[];
   firstIncreaseAt?: string | null;
   lastIncreaseAt?: string | null;
+  saveHistory?: boolean;
+  historyLogs?: HistoryLogEntry[];
 }
 
 interface UserData {
@@ -58,6 +63,8 @@ const defaultUserData: UserData = {
     },
     firstIncreaseAt: null,
     lastIncreaseAt: null,
+    saveHistory: true,
+    historyLogs: [],
   },
   siyam: {
     totalDays: 0,
@@ -65,6 +72,8 @@ const defaultUserData: UserData = {
     ramadans: [],
     firstIncreaseAt: null,
     lastIncreaseAt: null,
+    saveHistory: true,
+    historyLogs: [],
   },
 };
 

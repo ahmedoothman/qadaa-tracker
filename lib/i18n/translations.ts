@@ -122,6 +122,25 @@ export const translations = {
         'May Allah accept your efforts and make them a means of drawing closer to Him',
       ameen: 'Allahumma ameen 🤲',
     },
+
+    history: {
+      title: 'Activity History',
+      saveHistory: 'Save History Logs',
+      clearHistory: 'Clear History',
+      confirmClear: 'Are you sure you want to clear the activity history?',
+      noLogs: 'No activity recorded yet.',
+      loggingDisabled: 'History logging is currently paused.',
+      autoConvertedDay: '5 prayers completed → +1 day',
+      completedCount: 'Completed:',
+      prayerCount: 'Count:',
+      prayers: {
+        fajr: 'Fajr',
+        dhuhr: 'Dhuhr',
+        asr: 'Asr',
+        maghrib: 'Maghrib',
+        isha: 'Isha',
+      },
+    },
   },
 
   ar: {
@@ -243,6 +262,25 @@ export const translations = {
     dashboard: {
       footerMessage: 'تقبل الله جهودكم وجعلها وسيلة للتقرب إليه',
       ameen: 'اللهم آمين 🤲',
+    },
+
+    history: {
+      title: 'سجل النشاط',
+      saveHistory: 'حفظ سجل النشاط',
+      clearHistory: 'مسح السجل',
+      confirmClear: 'هل أنت متأكد من مسح سجل النشاط؟',
+      noLogs: 'لا يوجد نشاط مسجل بعد.',
+      loggingDisabled: 'حفظ السجل متوقف حاليًا.',
+      autoConvertedDay: 'اكتمال 5 صلوات ← +1 يوم',
+      completedCount: 'المكتمل:',
+      prayerCount: 'العدد:',
+      prayers: {
+        fajr: 'الفجر',
+        dhuhr: 'الظهر',
+        asr: 'العصر',
+        maghrib: 'المغرب',
+        isha: 'العشاء',
+      },
     },
   },
 } as const;

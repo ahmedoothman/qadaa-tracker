@@ -3,8 +3,11 @@
 import React, { useState } from 'react';
 import { Sun, Calendar, Clock, PlayCircle } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
+import HistoryLog, { HistoryLogEntry } from '@/components/UI/HistoryLog';
 import SalahCalculator from './SalahCalculator';
 import { useLanguage } from '@/lib/i18n';
+
+const MAX_HISTORY_LOGS = 200;
 
 // Helper function to format date with day name
 const formatDateWithDay = (dateString: string, language: string): { date: string; day: string } => {
@@ -36,6 +39,8 @@ interface SalahData {
   };
   firstIncreaseAt?: string | null;
   lastIncreaseAt?: string | null;
+  saveHistory?: boolean;
+  historyLogs?: HistoryLogEntry[];
 }
 
 interface SalahTrackerProps {
@@ -48,9 +53,10 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
   const [manualInput, setManualInput] = useState('');
   const { t, isRTL, language } = useLanguage();
 
-  // Use props directly
   const totalDays = salahData?.totalDays || 0;
   const completed = salahData?.completedDays || 0;
+  const saveHistory = salahData?.saveHistory ?? true;
+  const historyLogs = salahData?.historyLogs || [];
 
   // Initialize prayer counters
   const prayerCounters = salahData?.prayerCounters || {
@@ -74,56 +80,73 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
     { name: 'Isha', nameAr: 'العشاء', key: 'isha' as const, color: 'indigo' },
   ];
 
-  // Check if all prayers have at least 1 count and convert to day
-  const checkAndConvertToDay = (updatedCounters: typeof prayerCounters) => {
-    const allHaveAtLeastOne = Object.values(updatedCounters).every(
-      (count) => count >= 1
-    );
-
-    if (allHaveAtLeastOne) {
-      // Reduce each counter by 1 and increase completed days by 1
-      const newCounters = {
-        fajr: updatedCounters.fajr - 1,
-        dhuhr: updatedCounters.dhuhr - 1,
-        asr: updatedCounters.asr - 1,
-        maghrib: updatedCounters.maghrib - 1,
-        isha: updatedCounters.isha - 1,
-      };
-
-      const newCompleted = Math.min(totalDays, completed + 1);
-
-      onUpdate({
-        ...salahData,
-        completedDays: newCompleted,
-        prayerCounters: newCounters,
-      });
-
-      // Recursively check if we can convert again
-      setTimeout(() => checkAndConvertToDay(newCounters), 100);
-    }
-  };
-
   const handlePrayerIncrement = (
     prayerKey: keyof typeof prayerCounters,
     increment: number
   ) => {
     const newCount = Math.max(0, prayerCounters[prayerKey] + increment);
-    const updatedCounters = {
+    const actualDelta = newCount - prayerCounters[prayerKey];
+    if (actualDelta === 0) return;
+
+    let currentCounters = {
       ...prayerCounters,
       [prayerKey]: newCount,
     };
-
+    let currentCompleted = completed;
     const now = new Date().toISOString();
+    let updatedLogs = [...historyLogs];
+
+    if (saveHistory) {
+      updatedLogs = [
+        {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          timestamp: now,
+          action: actualDelta > 0 ? 'prayer_increment' : 'prayer_decrement',
+          delta: actualDelta,
+          prayer: prayerKey,
+          completedAfter: currentCompleted,
+          prayerCountAfter: newCount,
+        },
+        ...updatedLogs,
+      ];
+    }
+
+    if (increment > 0) {
+      while (Object.values(currentCounters).every((count) => count >= 1)) {
+        currentCounters = {
+          fajr: currentCounters.fajr - 1,
+          dhuhr: currentCounters.dhuhr - 1,
+          asr: currentCounters.asr - 1,
+          maghrib: currentCounters.maghrib - 1,
+          isha: currentCounters.isha - 1,
+        };
+        currentCompleted = Math.min(totalDays, currentCompleted + 1);
+
+        if (saveHistory) {
+          updatedLogs = [
+            {
+              id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+              timestamp: now,
+              action: 'auto_convert_day',
+              delta: 1,
+              completedAfter: currentCompleted,
+            },
+            ...updatedLogs,
+          ];
+        }
+      }
+    }
+
     const updates: Partial<SalahData> = {
-      prayerCounters: updatedCounters,
+      completedDays: currentCompleted,
+      prayerCounters: currentCounters,
+      historyLogs: updatedLogs.slice(0, MAX_HISTORY_LOGS),
     };
 
     if (increment > 0) {
-      // Track first increase if not set
       if (!salahData.firstIncreaseAt) {
         updates.firstIncreaseAt = now;
       }
-      // Always update last increase
       updates.lastIncreaseAt = now;
     }
 
@@ -131,11 +154,6 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
       ...salahData,
       ...updates,
     });
-
-    // Check if we should convert to a day
-    if (increment > 0) {
-      setTimeout(() => checkAndConvertToDay(updatedCounters), 100);
-    }
   };
 
   const handleCalculateResult = (result: {
@@ -145,6 +163,7 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
     menstrualDaysPerMonth: number;
   }) => {
     onUpdate({
+      ...salahData,
       totalDays: result.totalDays,
       completedDays: completed,
       startDate: result.startDate,
@@ -169,25 +188,55 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
       0,
       Math.min(totalDays, completed + increment)
     );
+    const actualDelta = newCompleted - completed;
+    if (actualDelta === 0) return;
 
     const now = new Date().toISOString();
+    let updatedLogs = [...historyLogs];
+
+    if (saveHistory) {
+      updatedLogs = [
+        {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          timestamp: now,
+          action: actualDelta > 0 ? 'day_increment' : 'day_decrement',
+          delta: actualDelta,
+          completedAfter: newCompleted,
+        },
+        ...updatedLogs,
+      ].slice(0, MAX_HISTORY_LOGS);
+    }
+
     const updates: Partial<SalahData> = {
       totalDays: totalDays,
       completedDays: newCompleted,
+      historyLogs: updatedLogs,
     };
 
     if (increment > 0) {
-      // Track first increase if not set
       if (!salahData.firstIncreaseAt) {
         updates.firstIncreaseAt = now;
       }
-      // Always update last increase
       updates.lastIncreaseAt = now;
     }
 
     onUpdate({
       ...salahData,
       ...updates,
+    });
+  };
+
+  const handleToggleSaveHistory = (enabled: boolean) => {
+    onUpdate({
+      ...salahData,
+      saveHistory: enabled,
+    });
+  };
+
+  const handleClearHistory = () => {
+    onUpdate({
+      ...salahData,
+      historyLogs: [],
     });
   };
 
@@ -412,6 +461,14 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
               {t.salah.completionMessage}
             </div>
           )}
+
+          <HistoryLog
+            logs={historyLogs}
+            saveHistory={saveHistory}
+            onToggleSaveHistory={handleToggleSaveHistory}
+            onClearHistory={handleClearHistory}
+            accentColor='teal'
+          />
         </>
       ) : (
         <SalahCalculator
