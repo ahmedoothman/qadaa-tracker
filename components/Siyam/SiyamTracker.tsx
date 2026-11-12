@@ -45,6 +45,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
   const [showAddYear, setShowAddYear] = useState(false);
   const [newYear, setNewYear] = useState(new Date().getFullYear());
   const [newDays, setNewDays] = useState(30);
+  const [manualInput, setManualInput] = useState('');
   const { t, isRTL, language } = useLanguage();
 
   const ramadans = siyamData?.ramadans || [];
@@ -121,6 +122,17 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
       ...siyamData,
       historyLogs: [],
     });
+  };
+
+  const handleManualUpdate = () => {
+    const newTotal = Math.max(0, parseInt(manualInput) || 0);
+    onUpdate({
+      ...siyamData,
+      totalDays: newTotal,
+      completedDays: Math.min(completedDays, newTotal),
+      ramadans,
+    });
+    setManualInput('');
   };
 
   const addRamadan = () => {
@@ -267,7 +279,7 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             </button>
           </div>
         </div>
-      ) : ramadans.length > 0 ? (
+      ) : totalDays > 0 || ramadans.length > 0 ? (
         <>
           {/* Progress Circle with Date Boxes on same line */}
           <div className={`flex items-center justify-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -370,96 +382,138 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             </button>
           </div>
 
-          <div className='border-t pt-3 sm:pt-4 mb-3 sm:mb-4'>
-            <div
-              className={`flex items-center justify-between gap-2 ${
-                isRTL ? 'flex-row-reverse' : ''
-              }`}
-            >
-              <h3 className='text-xs sm:text-sm font-semibold text-gray-700'>
-                {t.siyam.ramadanHistory}
-              </h3>
-              <span className='text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold whitespace-nowrap'>
-                {ramadans.length}{' '}
-                {ramadans.length !== 1 ? t.siyam.ramadans : t.siyam.ramadan}
-              </span>
-            </div>
-          </div>
-
-          <div className='space-y-2 sm:space-y-3 mb-3 sm:mb-4 max-h-60 sm:max-h-80 overflow-y-auto'>
-            {ramadans.map((ramadan, index) => (
-              <div
-                key={index}
-                className='border border-gray-200 rounded-lg p-2.5 sm:p-3 bg-gray-50'
-              >
+          {ramadans.length > 0 && (
+            <>
+              <div className='border-t pt-3 sm:pt-4 mb-3 sm:mb-4'>
                 <div
-                  className={`flex justify-between items-start sm:items-center gap-2 ${
+                  className={`flex items-center justify-between gap-2 ${
                     isRTL ? 'flex-row-reverse' : ''
                   }`}
                 >
-                  <div
-                    className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}
-                  >
-                    <h3 className='font-semibold text-gray-800 text-xs sm:text-sm truncate'>
-                      {t.siyam.ramadan} {ramadan.year} AH (
-                      {ramadan.gregorianYear} CE)
-                    </h3>
-                    {ramadan.startDate && (
-                      <p className='text-xs text-gray-500 mt-0.5 truncate'>
-                        {new Date(ramadan.startDate).toLocaleDateString(
-                          language === 'ar' ? 'ar-EG' : 'en-GB'
-                        )}{' '}
-                        -{' '}
-                        {new Date(ramadan.endDate).toLocaleDateString(
-                          language === 'ar' ? 'ar-EG' : 'en-GB'
-                        )}
-                      </p>
-                    )}
-                  </div>
-                  <div
-                    className={`flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
-                      isRTL ? 'flex-row-reverse' : ''
-                    }`}
-                  >
-                    <span className='text-xs sm:text-sm text-gray-600 font-medium whitespace-nowrap'>
-                      {ramadan.totalDays} {t.common.days}
-                    </span>
-                    <button
-                      onClick={() => removeRamadan(index)}
-                      className='p-1.5 sm:p-1 text-red-500 hover:text-red-700 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center'
-                      title={t.common.remove}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
+                  <h3 className='text-xs sm:text-sm font-semibold text-gray-700'>
+                    {t.siyam.ramadanHistory}
+                  </h3>
+                  <span className='text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full font-semibold whitespace-nowrap'>
+                    {ramadans.length}{' '}
+                    {ramadans.length !== 1 ? t.siyam.ramadans : t.siyam.ramadan}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
 
-          <div
-            className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
-              isRTL ? 'sm:flex-row-reverse' : ''
-            }`}
-          >
-            <button
-              onClick={() => setShowAddYear(true)}
-              className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
-                isRTL ? 'flex-row-reverse' : ''
+              <div className='space-y-2 sm:space-y-3 mb-3 sm:mb-4 max-h-60 sm:max-h-80 overflow-y-auto'>
+                {ramadans.map((ramadan, index) => (
+                  <div
+                    key={index}
+                    className='border border-gray-200 rounded-lg p-2.5 sm:p-3 bg-gray-50'
+                  >
+                    <div
+                      className={`flex justify-between items-start sm:items-center gap-2 ${
+                        isRTL ? 'flex-row-reverse' : ''
+                      }`}
+                    >
+                      <div
+                        className={`flex-1 min-w-0 ${
+                          isRTL ? 'text-right' : ''
+                        }`}
+                      >
+                        <h3 className='font-semibold text-gray-800 text-xs sm:text-sm truncate'>
+                          {t.siyam.ramadan} {ramadan.year} AH (
+                          {ramadan.gregorianYear} CE)
+                        </h3>
+                        {ramadan.startDate && (
+                          <p className='text-xs text-gray-500 mt-0.5 truncate'>
+                            {new Date(ramadan.startDate).toLocaleDateString(
+                              language === 'ar' ? 'ar-EG' : 'en-GB'
+                            )}{' '}
+                            -{' '}
+                            {new Date(ramadan.endDate).toLocaleDateString(
+                              language === 'ar' ? 'ar-EG' : 'en-GB'
+                            )}
+                          </p>
+                        )}
+                      </div>
+                      <div
+                        className={`flex items-center gap-1.5 sm:gap-2 flex-shrink-0 ${
+                          isRTL ? 'flex-row-reverse' : ''
+                        }`}
+                      >
+                        <span className='text-xs sm:text-sm text-gray-600 font-medium whitespace-nowrap'>
+                          {ramadan.totalDays} {t.common.days}
+                        </span>
+                        <button
+                          type='button'
+                          onClick={() => removeRamadan(index)}
+                          className='p-1.5 sm:p-1 text-red-500 hover:text-red-700 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center'
+                          title={t.common.remove}
+                        >
+                          <Trash2 size={16} aria-hidden='true' />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className='space-y-2 sm:space-y-3'>
+            <div
+              className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+                isRTL ? 'sm:flex-row-reverse' : ''
               }`}
             >
-              <Plus size={18} className='sm:w-5 sm:h-5' />
-              {t.common.addYear}
-            </button>
-            <button
-              onClick={() => setShowCalculator(true)}
-              className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
-                isRTL ? 'flex-row-reverse' : ''
+              <button
+                type='button'
+                onClick={() => setShowAddYear(true)}
+                className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
+                  isRTL ? 'flex-row-reverse' : ''
+                }`}
+              >
+                <Plus size={18} className='sm:w-5 sm:h-5' aria-hidden='true' />
+                {t.common.addYear}
+              </button>
+              <button
+                type='button'
+                onClick={() => setShowCalculator(true)}
+                className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
+                  isRTL ? 'flex-row-reverse' : ''
+                }`}
+              >
+                <Calendar
+                  size={18}
+                  className='sm:w-5 sm:h-5'
+                  aria-hidden='true'
+                />
+                {ramadans.length > 0
+                  ? t.common.recalculate
+                  : t.common.useCalculator}
+              </button>
+            </div>
+
+            <div
+              className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+                isRTL ? 'sm:flex-row-reverse' : ''
               }`}
             >
-              <Calendar size={18} className='sm:w-5 sm:h-5' />
-              {t.common.recalculate}
-            </button>
+              <input
+                type='number'
+                value={manualInput}
+                onChange={(e) => setManualInput(e.target.value)}
+                aria-label={t.common.totalDays}
+                className={`flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm sm:text-base min-h-[48px] ${
+                  isRTL ? 'text-right' : 'text-left'
+                }`}
+                placeholder={`${t.siyam.currentPlaceholder} ${totalDays} ${t.common.days}`}
+                min='0'
+              />
+              <button
+                type='button'
+                onClick={handleManualUpdate}
+                className='w-full sm:w-auto px-6 py-3 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors text-sm sm:text-base min-h-[48px]'
+              >
+                {t.common.update}
+              </button>
+            </div>
           </div>
 
           {percentage >= 100 && (
@@ -496,22 +550,53 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
             }`}
           >
             <button
+              type='button'
               onClick={() => setShowAddYear(true)}
               className={`flex-1 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Plus size={18} className='sm:w-5 sm:h-5' />
+              <Plus size={18} className='sm:w-5 sm:h-5' aria-hidden='true' />
               {t.common.addYear}
             </button>
             <button
+              type='button'
               onClick={() => setShowCalculator(true)}
               className={`flex-1 bg-amber-600 text-white py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <Calendar size={18} className='sm:w-5 sm:h-5' />
+              <Calendar
+                size={18}
+                className='sm:w-5 sm:h-5'
+                aria-hidden='true'
+              />
               {t.common.useCalculator}
+            </button>
+          </div>
+
+          <div
+            className={`flex flex-col sm:flex-row gap-2 sm:gap-3 ${
+              isRTL ? 'sm:flex-row-reverse' : ''
+            }`}
+          >
+            <input
+              type='number'
+              value={manualInput}
+              onChange={(e) => setManualInput(e.target.value)}
+              aria-label={t.common.totalDays}
+              className={`flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm sm:text-base min-h-[48px] ${
+                isRTL ? 'text-right' : 'text-left'
+              }`}
+              placeholder={`${t.siyam.currentPlaceholder} ${totalDays} ${t.common.days}`}
+              min='0'
+            />
+            <button
+              type='button'
+              onClick={handleManualUpdate}
+              className='w-full sm:w-auto px-6 py-3 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors text-sm sm:text-base min-h-[48px]'
+            >
+              {t.common.update}
             </button>
           </div>
         </div>

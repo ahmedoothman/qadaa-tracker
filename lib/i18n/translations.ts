@@ -86,6 +86,7 @@ export const translations = {
       addRamadanYear: 'Add Ramadan Year',
       yearAlreadyExists: 'This year already exists in your list',
       confirmRemove: 'Are you sure you want to remove this Ramadan?',
+      currentPlaceholder: 'Current:',
     },
 
     // Siyam Calculator
@@ -228,6 +229,7 @@ export const translations = {
       addRamadanYear: 'إضافة سنة رمضان',
       yearAlreadyExists: 'هذه السنة موجودة بالفعل في قائمتك',
       confirmRemove: 'هل أنت متأكد من حذف هذا الرمضان؟',
+      currentPlaceholder: 'الحالي:',
     },
 
     // Siyam Calculator
