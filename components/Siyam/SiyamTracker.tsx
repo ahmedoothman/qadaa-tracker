@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Moon, Calendar, Plus, Trash2, Clock, PlayCircle } from 'lucide-react';
+import { Moon, Calendar, Plus, Trash2, Clock } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
 import HistoryLog, { HistoryLogEntry } from '@/components/UI/HistoryLog';
 import SiyamCalculator from './SiyamCalculator';
@@ -281,56 +281,24 @@ const SiyamTracker: React.FC<SiyamTrackerProps> = ({ siyamData, onUpdate }) => {
         </div>
       ) : totalDays > 0 || ramadans.length > 0 ? (
         <>
-          {/* Progress Circle with Date Boxes on same line */}
-          <div className={`flex items-center justify-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            {/* First Increase Box */}
-            {siyamData.firstIncreaseAt && (() => {
-              const { date, day } = formatDateWithDay(siyamData.firstIncreaseAt, language);
-              return (
-                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className='w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <PlayCircle className='text-amber-600' size={16} />
-                  </div>
-                  <div className={`${isRTL ? 'text-right' : ''}`}>
-                    <p className='text-[10px] uppercase tracking-wide text-amber-600 font-semibold'>
-                      {isRTL ? 'أول زيادة' : 'First Increase'}
-                    </p>
-                    <p className='text-xs font-bold text-gray-800'>{day}</p>
-                    <p className='text-[10px] text-gray-500'>{date}</p>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Progress Circle */}
+          <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
             <ProgressCircle percentage={percentage} color='#D97706' />
-
-            {/* Last Increase Box */}
             {siyamData.lastIncreaseAt && (() => {
               const { date, day } = formatDateWithDay(siyamData.lastIncreaseAt, language);
               return (
-                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className='w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <Clock className='text-orange-600' size={16} />
-                  </div>
-                  <div className={`${isRTL ? 'text-right' : ''}`}>
-                    <p className='text-[10px] uppercase tracking-wide text-orange-600 font-semibold'>
-                      {isRTL ? 'آخر زيادة' : 'Last Increase'}
-                    </p>
-                    <p className='text-xs font-bold text-gray-800'>{day}</p>
-                    <p className='text-[10px] text-gray-500'>{date}</p>
-                  </div>
+                <div className={`mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 rounded-full shadow-2xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <Clock className='text-amber-600 flex-shrink-0' size={14} />
+                  <span className='text-xs font-semibold text-amber-700'>
+                    {t.common.lastIncrease}:
+                  </span>
+                  <span className='text-xs font-medium text-gray-700'>
+                    {day} • {date}
+                  </span>
                 </div>
               );
             })()}
-
-            {/* Show only progress if no date boxes */}
-            {!siyamData.firstIncreaseAt && !siyamData.lastIncreaseAt && (
-              <ProgressCircle percentage={percentage} color='#D97706' />
-            )}
           </div>
 
-          {/* Stats Grid */}
           <div className='grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-amber-600'>

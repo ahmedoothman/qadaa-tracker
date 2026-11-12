@@ -20,6 +20,7 @@ export const translations = {
       year: 'Year',
       daysMissed: 'Days Missed',
       pleaseWait: 'Please wait...',
+      lastIncrease: 'Last Increase',
     },
 
     // Auth
@@ -165,6 +166,7 @@ export const translations = {
       year: 'السنة',
       daysMissed: 'الأيام الفائتة',
       pleaseWait: 'يرجى الانتظار...',
+      lastIncrease: 'آخر زيادة',
     },
 
     // Auth

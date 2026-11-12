@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Sun, Calendar, Clock, PlayCircle } from 'lucide-react';
+import { Sun, Calendar, Clock } from 'lucide-react';
 import { ProgressCircle } from '@/components/UI/ProgressBar';
 import HistoryLog, { HistoryLogEntry } from '@/components/UI/HistoryLog';
 import SalahCalculator from './SalahCalculator';
@@ -259,56 +259,24 @@ const SalahTracker: React.FC<SalahTrackerProps> = ({ salahData, onUpdate }) => {
 
       {!showCalculator ? (
         <>
-          {/* Progress Circle with Date Boxes on same line */}
-          <div className={`flex items-center justify-center gap-3 mb-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            {/* First Increase Box */}
-            {salahData.firstIncreaseAt && (() => {
-              const { date, day } = formatDateWithDay(salahData.firstIncreaseAt, language);
-              return (
-                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className='w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <PlayCircle className='text-teal-600' size={16} />
-                  </div>
-                  <div className={`${isRTL ? 'text-right' : ''}`}>
-                    <p className='text-[10px] uppercase tracking-wide text-teal-600 font-semibold'>
-                      {isRTL ? 'أول زيادة' : 'First Increase'}
-                    </p>
-                    <p className='text-xs font-bold text-gray-800'>{day}</p>
-                    <p className='text-[10px] text-gray-500'>{date}</p>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Progress Circle */}
+          <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
             <ProgressCircle percentage={percentage} />
-
-            {/* Last Increase Box */}
             {salahData.lastIncreaseAt && (() => {
               const { date, day } = formatDateWithDay(salahData.lastIncreaseAt, language);
               return (
-                <div className={`flex items-center gap-2 px-3 py-2 bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200 rounded-xl shadow-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className='w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0'>
-                    <Clock className='text-emerald-600' size={16} />
-                  </div>
-                  <div className={`${isRTL ? 'text-right' : ''}`}>
-                    <p className='text-[10px] uppercase tracking-wide text-emerald-600 font-semibold'>
-                      {isRTL ? 'آخر زيادة' : 'Last Increase'}
-                    </p>
-                    <p className='text-xs font-bold text-gray-800'>{day}</p>
-                    <p className='text-[10px] text-gray-500'>{date}</p>
-                  </div>
+                <div className={`mt-3 inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200/80 rounded-full shadow-2xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <Clock className='text-teal-600 flex-shrink-0' size={14} />
+                  <span className='text-xs font-semibold text-teal-700'>
+                    {t.common.lastIncrease}:
+                  </span>
+                  <span className='text-xs font-medium text-gray-700'>
+                    {day} • {date}
+                  </span>
                 </div>
               );
             })()}
-
-            {/* Show only progress if no date boxes */}
-            {!salahData.firstIncreaseAt && !salahData.lastIncreaseAt && (
-              <ProgressCircle percentage={percentage} />
-            )}
           </div>
 
-          {/* Stats Grid */}
           <div className='grid grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6'>
             <div className='text-center p-2 sm:p-0'>
               <p className='text-2xl sm:text-3xl font-bold text-teal-600'>
